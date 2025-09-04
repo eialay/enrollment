@@ -10,3 +10,7 @@ Route::get('/register', function () {
     return view('auth.register');
 });
 
+Route::get('/dashboard', function () {
+    return view('dashboard');
+}); //->middleware(['auth'])->name('dashboard');
+

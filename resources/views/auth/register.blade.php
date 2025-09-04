@@ -1,6 +1,6 @@
 <x-app>
     <x-slot:title>
-        Registration
+        Student Registration
     </x-slot>
 
     <div 
@@ -8,9 +8,9 @@
         style="background-image: linear-gradient(rgba(250, 250, 250, 0.937), rgba(8, 52, 117, 0.942)), url('../assets/img/img.jpg');"
     >
 
-        <div class="w-3/4 mx-5 bg-white p-10 flex flex-col justify-center">
+        <div class="w-3/4 my-8 bg-white p-10 flex flex-col justify-center">
             <h1 class="text-2xl font-bold text-blue-900 mb-6 text-center">
-                Registration
+                Student Registration
             </h1>
         
             <form action="/register" method="POST" class="space-y-6">
@@ -33,18 +33,15 @@
 
                 <x-form.text name="address" label="Address" required />
 
-                <h3 class="font-bold text-blue-900">Documents</h3>
+                <h3 class="font-bold text-blue-900 mt-12 uppercase">Documents</h3>
                 <div class="md:flex gap-2">
                     <x-form.file name="birthCertificate" label="Birth Certificate" helpText="PSA" />
                     <x-form.file name="form137" label="Form 137" helpText=""/>
-                </div>
-                <div class="md:flex gap-2">
                     <x-form.file name="goodMoral" label="Good Moral" />
                     <x-form.file name="reportCard" label="Report Card" />
                 </div>
 
-
-                <h3 class="font-bold text-blue-900">Parent/Guardian</h3>
+                <h3 class="font-bold text-blue-900 mt-12 uppercase">Parent/Guardian</h3>
                 <div class="md:flex gap-2">
                     <x-form.text name="guardianFName" label="First Name" required />
                     <x-form.text name="guardianMName" label="Middle Name" required />

@@ -1,6 +1,6 @@
 <x-app>
     <x-slot:title>
-        Custom Title
+        Login
     </x-slot>
 
     <div 
