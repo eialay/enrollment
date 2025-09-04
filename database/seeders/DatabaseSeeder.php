@@ -15,9 +15,25 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        // Insert default roles
+        \DB::table('roles')->insert([
+            ['name' => 'Admin', 'created_at' => now(), 'updated_at' => now()],
+            ['name' => 'Registrar', 'created_at' => now(), 'updated_at' => now()],
+            ['name' => 'Cashier', 'created_at' => now(), 'updated_at' => now()],
+            ['name' => 'Student', 'created_at' => now(), 'updated_at' => now()],
         ]);
+
+        // Create default admin account
+        User::create([
+            'name' => 'Admin',
+            'email' => 'admin@example.com',
+            'password' => bcrypt('admin123'),
+            'role' => 1
+        ]);
+
+        // User::factory()->create([
+        //     'name' => 'Test User',
+        //     'email' => 'test@example.com',
+        // ]);
     }
 }
