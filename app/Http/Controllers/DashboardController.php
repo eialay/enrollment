@@ -22,10 +22,10 @@ class DashboardController extends Controller
         $enrolledCount = $student->where('status', 'Enrolled')->count();
 
          $data['cards'] = [
-            [ 'title' => 'Total Students ('.date('Y').')' , 'value' => $studentCount, 'icon' => 'fa-users', 'color' => 'blue' ],
-            [ 'title' => 'Pending Review', 'value' => $pendingReviewCount, 'icon' => 'fa-hourglass-half', 'color' => 'yellow' ],
-            [ 'title' => 'Pending Payment', 'value' => $pendingPaymentCount, 'icon' => 'fa-wallet', 'color' => 'orange' ],
-            [ 'title' => 'Enrolled Students', 'value' => $enrolledCount, 'icon' => 'fa-user-check', 'color' => 'green' ],
+            [ 'title' => 'Pending Review', 'value' => $pendingReviewCount, 'icon' => 'fa-hourglass-half', 'color' => 'yellow', 'link' => route('enrollment.index', ['status' => 'Pending Review']) ],
+            [ 'title' => 'Pending Payment', 'value' => $pendingPaymentCount, 'icon' => 'fa-wallet', 'color' => 'orange', 'link' => route('enrollment.index', ['status' => 'Pending Payment']) ],
+            [ 'title' => 'Enrolled Students', 'value' => $enrolledCount, 'icon' => 'fa-user-check', 'color' => 'green', 'link' => route('enrollment.index', ['status' => 'Enrolled'])    ],
+            [ 'title' => 'Total Students ('.date('Y').')' , 'value' => $studentCount, 'icon' => 'fa-users', 'color' => 'blue', 'link' => route('enrollment.index')  ],
         ];
 
 

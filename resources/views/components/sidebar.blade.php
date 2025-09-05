@@ -12,33 +12,34 @@
                 <nav class="flex-1">
                     <div class="mb-4">
                         <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider px-2 mb-1">Main</p>
-                        <a href="#" class="sidebar-item active flex items-center px-2 py-3 rounded-lg font-medium">
-                            <i class="fas fa-tachometer-alt mr-3 text-indigo-600"></i>
+                        <a href="/dashboard" class="sidebar-item flex items-center px-2 py-3 rounded-lg font-medium {{ request()->is('dashboard') ? 'active bg-indigo-100 text-indigo-700 font-bold' : 'text-gray-700' }}">
+                            <i class="fas fa-tachometer-alt mr-3 {{ request()->is('dashboard') ? 'text-indigo-700' : 'text-gray-500' }}"></i>
                             <span>Dashboard</span>
                         </a>
                     </div>
                     
+                    @if(Auth::user()->role->name !== 'Student')   
                     <div class="mb-4">
                         <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider px-2 mb-1">Management</p>
-                        <a href="#" class="sidebar-item flex items-center px-2 py-2 text-gray-700 rounded-lg mb-1">
-                            <i class="fas fa-user-graduate mr-3 w-5 text-center text-gray-500"></i>
+                        <a href="/enrollment" class="sidebar-item flex items-center px-2 py-2 rounded-lg mb-1 {{ request()->is('enrollment*') ? 'active bg-indigo-100 text-indigo-700 font-bold' : 'text-gray-700' }}">
+                            <i class="fas fa-user-graduate mr-3 w-5 text-center {{ request()->is('enrollment*') ? 'text-indigo-700' : 'text-gray-500' }}"></i>
                             <span>Enrollment</span>
-                            <span class="ml-auto bg-indigo-100 text-indigo-800 text-xs px-2 py-1 rounded-full">24 New</span>
+                            <!-- <span class="ml-auto bg-indigo-100 text-indigo-800 text-xs px-2 py-1 rounded-full">24 New</span> -->
                         </a>
                     </div>
-                    
                     <div class="mb-4">
                         <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider px-2 mb-1">Operations</p>
-                        <a href="#" class="sidebar-item flex items-center px-2 py-2 text-gray-700 rounded-lg mb-1">
-                            <i class="fas fa-money-bill-wave mr-3 w-5 text-center text-gray-500"></i>
+                        <a href="#" class="sidebar-item flex items-center px-2 py-2 rounded-lg mb-1 {{ request()->is('payments*') ? 'active bg-indigo-100 text-indigo-700' : 'text-gray-700' }}">
+                            <i class="fas fa-money-bill-wave mr-3 w-5 text-center {{ request()->is('payments*') ? 'text-indigo-700' : 'text-gray-500' }}"></i>
                             <span>Payments</span>
                         </a>
                     </div>
+                    @endif
 
                     <div>
                         <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider px-2 mb-1">Account</p>
-                        <a href="#" class="sidebar-item flex items-center px-2 py-2 text-gray-700 rounded-lg mb-1">
-                            <i class="fas fa-user mr-3 w-5 text-center text-gray-500"></i>
+                        <a href="#" class="sidebar-item flex items-center px-2 py-2 rounded-lg mb-1 {{ request()->is('profile') ? 'active bg-indigo-100 text-indigo-700' : 'text-gray-700' }}">
+                            <i class="fas fa-user mr-3 w-5 text-center {{ request()->is('profile') ? 'text-indigo-700' : 'text-gray-500' }}"></i>
                             <span>Profile</span>
                         </a>
                         <a href="/logout" class="sidebar-item flex items-center px-2 py-2 text-gray-700 rounded-lg mb-1">

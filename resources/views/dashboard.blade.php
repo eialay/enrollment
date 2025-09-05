@@ -16,7 +16,8 @@
                 :color="$card['color']"
                 :change="isset($card['change']) ? $card['change'] : ''" 
                 :changeType="isset($card['changeType']) ? $card['changeType'] : ''" 
-                :comparisonText="isset($card['comparisonText']) ? $card['comparisonText'] : ''" />
+                :comparisonText="isset($card['comparisonText']) ? $card['comparisonText'] : ''"
+                :link="$card['link']" />
         @endforeach
     </div>
     @endif

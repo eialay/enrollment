@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\Student;
+use App\Models\Enrollment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
@@ -69,6 +70,12 @@ class RegisterController extends Controller
         }
 
         $student = Student::create($studentData);
+
+        // Insert into enrollments table
+        Enrollment::create([
+            'student_id' => $student->id,
+            'status' => 'Pending Review',
+        ]);
 
         Auth::login($user);
 
