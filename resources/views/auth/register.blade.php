@@ -13,7 +13,8 @@
                 Student Registration
             </h1>
         
-            <form action="/register" method="POST" class="space-y-6">
+            <form id="registrationForm" action="{{ route('register.submit') }}" method="POST" class="space-y-6" enctype="multipart/form-data" onsubmit="return validatePasswordConfirmation();">
+                @csrf
                 <div class="md:flex gap-2">
                     <x-form.text name="firstname" label="First Name" required />
                     <x-form.text name="middlename" label="Middle Name" required />
@@ -22,13 +23,14 @@
 
                 <div class="md:flex gap-2">
                     <x-form.text name="email" label="Email" required />
-                    <x-form.text name="contact" label="Contact Number" required />
+                    <x-form.text name="contact" label="Contact Number" required maxLength="11"/>
                     <x-form.text name="birthdate" label="Birthdate" required />
                 </div>
 
                 <div class="md:flex gap-2">
                     <x-form.password name="password" label="Password" required />
-                    <x-form.password name="confirm_password" label="Confirm Password" required />
+                    <x-form.password name="password_confirmation" label="Confirm Password" required />
+                    <div id="passwordError" class="text-red-600 text-sm" style="display:none;"></div>
                 </div>
 
                 <x-form.text name="address" label="Address" required />
@@ -49,7 +51,7 @@
                 </div>
                 <div class="md:flex gap-2">
                     <x-form.text name="guardianEmail" label="Email" required />
-                    <x-form.text name="guardianContact" label="Contact Number" required />
+                    <x-form.text name="guardianContact" label="Contact Number" required maxLength="11"/>
                     <x-form.text name="guardianRelationship" label="Relationship" required />
                 </div>
                 <x-form.text name="guardianAddress" label="Address" required />
@@ -66,6 +68,23 @@
                 </button>
                 </div>
             </form>
+            <script>
+            function validatePasswordConfirmation() {
+                var password = document.querySelector('[name="password"]');
+                var confirm = document.querySelector('[name="password_confirmation"]');
+                var errorDiv = document.getElementById('passwordError');
+                if (password && confirm && password.value !== confirm.value) {
+                    errorDiv.textContent = 'Passwords do not match.';
+                    errorDiv.style.display = 'block';
+                    confirm.focus();
+                    return false;
+                } else {
+                    errorDiv.textContent = '';
+                    errorDiv.style.display = 'none';
+                    return true;
+                }
+            }
+            </script>
 
             <a href="/" class="text-blue-700 p-5 text-center hover:underline">Back to Login</a>
         </div>

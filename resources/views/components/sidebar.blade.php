@@ -5,7 +5,7 @@
 
     <div class="flex h-screen bg-gray-100">
         <!-- Sidebar -->
-        <aside class="w-64 bg-white shadow-md flex flex-col ">
+        <aside class="w-64 bg-white shadow-md flex flex-col justify-between">
             <div class="p-6">
                 <h2 class="text-2xl font-bold text-blue-900 mb-6">Enrollment System</h2>
                 <!-- Menu -->
@@ -25,19 +25,6 @@
                             <span>Enrollment</span>
                             <span class="ml-auto bg-indigo-100 text-indigo-800 text-xs px-2 py-1 rounded-full">24 New</span>
                         </a>
-                        <a href="#" class="sidebar-item flex items-center px-2 py-2 text-gray-700 rounded-lg mb-1">
-                            <i class="fas fa-clipboard-list mr-3 w-5 text-center text-gray-500"></i>
-                            <span>Registrar (SIS)</span>
-                        </a>
-                        <a href="#" class="sidebar-item flex items-center px-2 py-2 text-gray-700 rounded-lg mb-1">
-                            <i class="fas fa-book mr-3 w-5 text-center text-gray-500"></i>
-                            <span>Curriculum</span>
-                        </a>
-                        <a href="#" class="sidebar-item flex items-center px-2 py-2 text-gray-700 rounded-lg mb-1">
-                            <i class="fas fa-certificate mr-3 w-5 text-center text-gray-500"></i>
-                            <span>Accreditation</span>
-                            <span class="ml-auto bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">3 Updates</span>
-                        </a>
                     </div>
                     
                     <div class="mb-4">
@@ -46,30 +33,17 @@
                             <i class="fas fa-money-bill-wave mr-3 w-5 text-center text-gray-500"></i>
                             <span>Payments</span>
                         </a>
-                        <a href="#" class="sidebar-item flex items-center px-2 py-2 text-gray-700 rounded-lg mb-1">
-                            <i class="fas fa-chalkboard-teacher mr-3 w-5 text-center text-gray-500"></i>
-                            <span>Faculty</span>
-                        </a>
-                        <a href="#" class="sidebar-item flex items-center px-2 py-2 text-gray-700 rounded-lg mb-1">
-                            <i class="fas fa-calendar-alt mr-3 w-5 text-center text-gray-500"></i>
-                            <span>Class Scheduling</span>
-                        </a>
-                        <a href="#" class="sidebar-item flex items-center px-2 py-2 text-gray-700 rounded-lg mb-1">
-                            <i class="fas fa-icons mr-3 w-5 text-center text-gray-500"></i>
-                            <span>Co-curricular</span>
-                        </a>
                     </div>
-                    
+
                     <div>
-                        <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider px-2 mb-1">Learning</p>
+                        <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider px-2 mb-1">Account</p>
                         <a href="#" class="sidebar-item flex items-center px-2 py-2 text-gray-700 rounded-lg mb-1">
-                            <i class="fas fa-laptop-code mr-3 w-5 text-center text-gray-500"></i>
-                            <span>Online Learning</span>
+                            <i class="fas fa-user mr-3 w-5 text-center text-gray-500"></i>
+                            <span>Profile</span>
                         </a>
-                        <a href="#" class="sidebar-item flex items-center px-2 py-2 text-gray-700 rounded-lg mb-1">
-                            <i class="fas fa-flask mr-3 w-5 text-center text-gray-500"></i>
-                            <span>CRAD (Research)</span>
-                            <span class="ml-auto bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">5 New</span>
+                        <a href="/logout" class="sidebar-item flex items-center px-2 py-2 text-gray-700 rounded-lg mb-1">
+                            <i class="fas fa-sign-out-alt mr-3 w-5 text-center text-gray-500"></i>
+                            <span>Log Out</span>
                         </a>
                     </div>
                 </nav>
@@ -83,12 +57,9 @@
                         <span class="absolute bottom-0 right-3 h-3 w-3 bg-green-500 rounded-full border-2 border-white"></span>
                     </div>
                     <div class="flex-1">
-                        <p class="text-sm font-medium">Admin User</p>
-                        <p class="text-xs text-gray-500">Super Admin</p>
+                        <p class="text-sm font-medium">{{ Auth::user()->name }}</p>
+                        <p class="text-xs text-gray-500">{{ Auth::user()->role->name }}</p>
                     </div>
-                    <button class="text-gray-400 hover:text-indigo-600 transition-colors">
-                        <i class="fas fa-ellipsis-v"></i>
-                    </button>
                 </div>
             </div>
         </aside>

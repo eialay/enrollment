@@ -30,6 +30,8 @@ return new class extends Migration {
             $table->string('guardianContact');
             $table->string('guardianRelationship');
             $table->string('guardianAddress');
+            $table->string('status')->default('Pending Review');
+            $table->string('remarks')->nullable();
             $table->timestamps();
             
             // $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');

@@ -23,13 +23,12 @@ class DatabaseSeeder extends Seeder
             ['name' => 'Student', 'created_at' => now(), 'updated_at' => now()],
         ]);
 
-        // Create default admin account
-        User::create([
-            'name' => 'Admin',
-            'email' => 'admin@example.com',
-            'password' => bcrypt('admin123'),
-            'role' => 1
-        ]);
+        // Create default accounts
+        User::create(
+            [ 'name' => 'Admin', 'email' => 'admin@example.com', 'password' => bcrypt('admin123'), 'role_id' => 1],
+            [ 'name' => 'Registrar', 'email' => 'registrar@example.com', 'password' => bcrypt('registrar123'), 'role_id' => 2],
+            [ 'name' => 'Cashier', 'email' => 'cashier@example.com', 'password' => bcrypt('cashier123'), 'role_id' => 3],
+        );
 
         // User::factory()->create([
         //     'name' => 'Test User',
