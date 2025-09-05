@@ -1,6 +1,6 @@
 <x-app>
     <x-slot:title>
-        Custom Title
+        Login
     </x-slot>
 
     <div 
@@ -29,9 +29,16 @@
                 Log in to your account
             </h3>
             
-            <form id="loginForm" action="/login" method="POST" class="space-y-6">
+            <form id="loginForm" action="{{ route('login') }}" method="POST" class="space-y-6">
+                @csrf
                 <x-form.text name="email" label="Email" required />
                 <x-form.password name="password" label="Password" required />
+
+                @if ($errors->has('email'))
+                    <div class="mb-4 text-red-600 text-sm">
+                        {{ $errors->first('email') }}
+                    </div>
+                @endif
 
                 <div>
                     <button
