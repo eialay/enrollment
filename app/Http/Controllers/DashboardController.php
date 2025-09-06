@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Student;
+use App\Models\Enrollment;
 
 class DashboardController extends Controller
 {
@@ -17,11 +18,11 @@ class DashboardController extends Controller
 
         $student = new Student();
         $studentCount = $student->whereYear('created_at', date('Y'))->count();
-        $pendingReviewCount = $student->where('status', 'Pending Review')->count();
-        $pendingPaymentCount = $student->where('status', 'Pending Payment')->count();
-        $enrolledCount = $student->where('status', 'Enrolled')->count();
+        $pendingReviewCount = Enrollment::where('status', 'Pending Review')->count();
+        $pendingPaymentCount = Enrollment::where('status', 'Pending Payment')->count();
+        $enrolledCount = Enrollment::where('status', 'Enrolled')->count();
 
-         $data['cards'] = [
+        $data['cards'] = [
             [ 'title' => 'Pending Review', 'value' => $pendingReviewCount, 'icon' => 'fa-hourglass-half', 'color' => 'yellow', 'link' => route('enrollment.index', ['status' => 'Pending Review']) ],
             [ 'title' => 'Pending Payment', 'value' => $pendingPaymentCount, 'icon' => 'fa-wallet', 'color' => 'orange', 'link' => route('enrollment.index', ['status' => 'Pending Payment']) ],
             [ 'title' => 'Enrolled Students', 'value' => $enrolledCount, 'icon' => 'fa-user-check', 'color' => 'green', 'link' => route('enrollment.index', ['status' => 'Enrolled'])    ],
@@ -40,24 +41,20 @@ class DashboardController extends Controller
                 break;
             case 'Student':
                 $studentRecord = $student->where('user_id', Auth::id())->first();
-                if ($studentRecord) {
+                if ($studentRecord && $studentRecord->enrollment) {
                     $data['student'] = $studentRecord;
-                    $statusColorMap = [
-                        'Enrolled' => 'green',
-                        'Pending' => 'yellow',
-                        'Rejected' => 'red',
-                    ];
-
+                    $status = $studentRecord->enrollment->status;
+                    $statusColors = config('enrollment.enrollment_status_colors');
+                    
                     $data['cards'] = [
                         [ 
                             'title' => 'Enrollment Status', 
-                            'value' => $studentRecord->status, 
+                            'value' => $status, 
                             'icon' => 'fa-user-graduate', 
-                            'color' => $statusColorMap[ explode(' ', $studentRecord->status)[0] ] ?? 'yellow'
+                            'color' => $statusColors[$status] ?? 'yellow'
                         ],
                     ];
-                } 
-
+                }
                 break;
             default:
                 return redirect()->route('login')->with('error', 'Unauthorized access.');

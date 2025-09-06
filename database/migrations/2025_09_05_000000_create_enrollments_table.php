@@ -12,15 +12,12 @@ return new class extends Migration {
             $table->unsignedBigInteger('student_id');
             $table->string('status')->nullable();
             $table->text('remarks')->nullable();
-            $table->unsignedBigInteger('enrollment_approved_by')->nullable();
-            $table->timestamp('enrollment_approved_at')->nullable();
-            $table->unsignedBigInteger('payment_approved_by')->nullable();
-            $table->timestamp('payment_approved_at')->nullable();
+            $table->unsignedBigInteger('reviewed_by')->nullable();
+            $table->timestamp('reviewed_at')->nullable();
             $table->timestamps();
 
             $table->foreign('student_id')->references('id')->on('students')->onDelete('cascade');
-            $table->foreign('enrollment_approved_by')->references('id')->on('users')->onDelete('set null');
-            $table->foreign('payment_approved_by')->references('id')->on('users')->onDelete('set null');
+            $table->foreign('reviewed_by')->references('id')->on('users')->onDelete('set null');
         });
     }
 

@@ -3,9 +3,9 @@
         {{ $title }}
     </x-slot>
 
-    <div class="flex h-screen bg-gray-100">
+    <div class="flex h-full bg-gray-100">
         <!-- Sidebar -->
-        <aside class="w-64 bg-white shadow-md flex flex-col justify-between">
+    <aside class="w-64 bg-white shadow-md flex flex-col justify-between h-screen sticky top-0">
             <div class="p-6">
                 <h2 class="text-2xl font-bold text-blue-900 mb-6">Enrollment System</h2>
                 <!-- Menu -->
@@ -54,7 +54,14 @@
             <div class="p-4 border-t border-gray-200">
                 <div class="flex items-center p-3 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow">
                     <div class="relative">
-                        <img src="https://placehold.co/40x40" alt="Admin profile" class="rounded-full mr-3 border-2 border-indigo-200">
+                        @php
+                            $user = Auth::user();
+                            $profileImage = 'https://placehold.co/40x40';
+                            if ($user->role->name === 'Student' && $user->student && $user->student->studentImage) {
+                                $profileImage = asset('storage/' . $user->student->studentImage);
+                            }
+                        @endphp
+                        <img src="{{ $profileImage }}" alt="Profile image" class="w-10 h-10 object-cover rounded-full mr-3 border-2 border-indigo-200">
                         <span class="absolute bottom-0 right-3 h-3 w-3 bg-green-500 rounded-full border-2 border-white"></span>
                     </div>
                     <div class="flex-1">
