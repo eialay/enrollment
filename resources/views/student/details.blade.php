@@ -18,8 +18,8 @@
                 </div>
             </div>
         @endif
+        <h2 class="text-2xl font-bold mb-6">Student Details</h2>
         <div class="w-full max-w-3xl bg-white rounded-lg shadow-lg p-8">
-            <h2 class="text-2xl font-bold text-blue-900 mb-6 text-center">Student Details</h2>
             <!-- Row 1: Student ID Card (Uniform Design) -->
             <div class="bg-gray-50 border border-gray-200 rounded-lg shadow p-6 mb-6">
                 <div class="flex flex-row items-center">
@@ -119,7 +119,7 @@
                     @if($student->enrollment->status === 'Pending Payment')
                         <a href="{{ route('payments.show') }}" class="px-6 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition">Pay Now</a>
                     @else
-                        <a href="{{ route('students.edit') }}" class="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">Edit</a>
+                        <a href="{{ route('students.edit', $student->id) }}" class="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">Edit</a>
                     @endif
                     <a href="{{ route('dashboard') }}" class="px-6 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-700 hover:text-white transition">Back</a>
                 @else

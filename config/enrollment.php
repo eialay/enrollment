@@ -8,4 +8,10 @@ return [
         'Enrolled' => 'green',
         'Paid' => 'green',
     ],
+    'payment_status_colors' => [
+        'Unpaid' => 'red',
+        'Partial' => 'yellow',
+        'Paid' => 'green',
+        'Approved' => 'green',
+    ],
 ];

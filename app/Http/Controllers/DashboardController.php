@@ -38,6 +38,15 @@ class DashboardController extends Controller
 
                 break;
             case 'Cashier':
+                $paidCount = Enrollment::where('status', 'Paid')->count();
+
+                $data['cards'] = [
+                    ['title' => 'Paid', 'value' => $paidCount, 'icon' => 'fa-check-circle', 'color' => 'teal', 'link' => route('payments.list', ['status' => 'Paid'])],
+                    [ 'title' => 'Pending Payment', 'value' => $pendingPaymentCount, 'icon' => 'fa-wallet', 'color' => 'orange', 'link' => route('enrollment.index', ['status' => 'Pending Payment']) ],
+                    [ 'title' => 'Enrolled Students', 'value' => $enrolledCount, 'icon' => 'fa-user-check', 'color' => 'green', 'link' => route('enrollment.index', ['status' => 'Enrolled'])    ],
+                    [ 'title' => 'Total Students ('.date('Y').')' , 'value' => $studentCount, 'icon' => 'fa-users', 'color' => 'blue', 'link' => route('enrollment.index')  ],
+                ];
+
                 break;
             case 'Student':
                 $studentRecord = $student->where('user_id', Auth::id())->first();

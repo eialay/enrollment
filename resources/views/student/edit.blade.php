@@ -3,7 +3,7 @@
         Edit Student Details
     </x-slot>
 
-    <form id="editStudentForm" action="{{ route('students.update') }}" method="POST" class="space-y-6" enctype="multipart/form-data" onsubmit="return validatePasswordConfirmation();">
+    <form id="editStudentForm" action="{{ route('students.update', $student->id) }}" method="POST" class="space-y-6" enctype="multipart/form-data" onsubmit="return validatePasswordConfirmation();">
     @csrf
     @method('POST')
         <div class="h-full flex flex-col items-center justify-center">
