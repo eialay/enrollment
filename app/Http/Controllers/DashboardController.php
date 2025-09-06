@@ -51,7 +51,8 @@ class DashboardController extends Controller
                             'title' => 'Enrollment Status', 
                             'value' => $status, 
                             'icon' => 'fa-user-graduate', 
-                            'color' => $statusColors[$status] ?? 'yellow'
+                            'color' => $statusColors[$status] ?? 'yellow',
+                            'link' => route('students.show', $studentRecord->id)
                         ],
                     ];
                 }

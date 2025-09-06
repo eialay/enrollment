@@ -1,4 +1,4 @@
-<div class="w-full">
+<div class="w-full mb-4">
     <label for="{{$name}}" class="block text-blue-900 font-semibold mb-1">{{ $label }}</label>
     <input
         type="text"

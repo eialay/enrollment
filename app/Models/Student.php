@@ -30,6 +30,10 @@ class Student extends Model
         'guardianRelationship',
         'guardianAddress',
     ];
+    public function payment()
+    {
+        return $this->hasOne(Payment::class);
+    }
     public function enrollment()
     {
         return $this->hasOne(Enrollment::class);

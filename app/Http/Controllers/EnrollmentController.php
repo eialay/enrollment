@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Student;
 use App\Models\Enrollment;
+use App\Models\Payment;
 
 class EnrollmentController extends Controller
 {
@@ -32,7 +33,7 @@ class EnrollmentController extends Controller
         // Status color maps from config
         $color = config('enrollment.enrollment_status_colors')[$student->enrollment->status ] ?? 'gray';
 
-        return view('student_details', compact('student', 'color'));
+        return view('student.details', compact('student', 'color'));
     }
 
     public function approve($id, Request $request)
@@ -44,6 +45,18 @@ class EnrollmentController extends Controller
             $student->enrollment->reviewed_by = auth()->user()->id;
             $student->enrollment->reviewed_at = now();
             $student->enrollment->save();
+
+            // Insert a record to payments table
+            Payment::create([
+                'student_id' => $student->id,
+                'balance' => 2000,
+                'paid_amount' => 0,
+                'status' => 'Pending Payment',
+                'remarks' => null,
+                'reviewed_by' => null,
+                'reviewed_at' => null,
+            ]);
+
             return redirect()->back()->with('success', 'Student approved and status updated to Pending Payment.');
         }
         return redirect()->back()->with('error', 'Unable to approve student.');

@@ -34,7 +34,7 @@
                             {{ $student->enrollment->status }}
                         </span>
                     </div>
-                    <div class="flex-1 grid grid-cols-1 md:grid-cols-2 gap-2">
+                    <div class="flex-1 grid grid-cols-1 md:grid-cols-2 gap-2">                        
                         <!-- Student Info Fields -->
                         <div class="font-bold text-lg text-blue-900 mb-1 col-span-2">{{ $student->firstname }} {{ $student->middlename }} {{ $student->lastname }}</div>
                         <div class="text-xs text-gray-600">Student ID: {{ $student->formatted_id }}</div>
@@ -115,6 +115,13 @@
                             <a href="{{ route('enrollment.index') }}" class="px-6 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-700 hover:text-white transition">Back to List</a>
                         </div>
                     </form>
+                @elseif(Auth::user()->role->name === 'Student' && $student->id === Auth::user()->student->id)
+                    @if($student->enrollment->status === 'Pending Payment')
+                        <a href="{{ route('payments.show') }}" class="px-6 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition">Pay Now</a>
+                    @else
+                        <a href="{{ route('students.edit') }}" class="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">Edit</a>
+                    @endif
+                    <a href="{{ route('dashboard') }}" class="px-6 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-700 hover:text-white transition">Back</a>
                 @else
                     <a href="{{ route('enrollment.index') }}" class="px-6 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-700 hover:text-white transition">Back to List</a>
                 @endif

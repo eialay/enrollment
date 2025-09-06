@@ -38,10 +38,17 @@
 
                     <div>
                         <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider px-2 mb-1">Account</p>
-                        <a href="#" class="sidebar-item flex items-center px-2 py-2 rounded-lg mb-1 {{ request()->is('profile') ? 'active bg-indigo-100 text-indigo-700' : 'text-gray-700' }}">
-                            <i class="fas fa-user mr-3 w-5 text-center {{ request()->is('profile') ? 'text-indigo-700' : 'text-gray-500' }}"></i>
-                            <span>Profile</span>
-                        </a>
+                        @if(Auth::user()->role->name === 'Student' && Auth::user()->student)
+                            <a href="{{ route('students.show', Auth::user()->student->id) }}" class="sidebar-item flex items-center px-2 py-2 rounded-lg mb-1 {{ request()->is('enrollment/' . Auth::user()->student->id) ? 'active bg-indigo-100 text-indigo-700' : 'text-gray-700' }}">
+                                <i class="fas fa-id-card mr-3 w-5 text-center {{ request()->is('enrollment/' . Auth::user()->student->id) ? 'text-indigo-700' : 'text-gray-500' }}"></i>
+                                <span>My Student Info</span>
+                            </a>
+                        @else
+                            <a href="#" class="sidebar-item flex items-center px-2 py-2 rounded-lg mb-1 {{ request()->is('profile') ? 'active bg-indigo-100 text-indigo-700' : 'text-gray-700' }}">
+                                <i class="fas fa-user mr-3 w-5 text-center {{ request()->is('profile') ? 'text-indigo-700' : 'text-gray-500' }}"></i>
+                                <span>Profile</span>
+                            </a>
+                        @endif
                         <a href="/logout" class="sidebar-item flex items-center px-2 py-2 text-gray-700 rounded-lg mb-1">
                             <i class="fas fa-sign-out-alt mr-3 w-5 text-center text-gray-500"></i>
                             <span>Log Out</span>
