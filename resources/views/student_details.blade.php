@@ -35,12 +35,19 @@
                         </span>
                     </div>
                     <div class="flex-1 grid grid-cols-1 md:grid-cols-2 gap-2">
+                        <!-- Student Info Fields -->
                         <div class="font-bold text-lg text-blue-900 mb-1 col-span-2">{{ $student->firstname }} {{ $student->middlename }} {{ $student->lastname }}</div>
                         <div class="text-xs text-gray-600">Student ID: {{ $student->formatted_id }}</div>
                         <div class="text-xs text-gray-600">Birthdate: {{ $student->birthdate ?? '-' }}</div>
                         <div class="text-xs text-gray-600">Email: {{ $student->user->email ?? '-' }}</div>
                         <div class="text-xs text-gray-600">Contact: {{ $student->contact ?? '-' }}</div>
                         <div class="text-xs text-gray-600 col-span-2">Address: {{ $student->address ?? '-' }}</div>
+                        @if($student->enrollment->status === 'Rejected' && !empty($student->enrollment->remarks))
+                            <div class="col-span-2 mt-2 text-xs">
+                                <span class="font-bold text-red-700">Remarks:</span>
+                                <span class=" text-red-700">{{ $student->enrollment->remarks }}</span>
+                            </div>
+                        @endif                    
                     </div>
                 </div>
             </div>

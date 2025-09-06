@@ -35,7 +35,7 @@ class EnrollmentController extends Controller
         return view('student_details', compact('student', 'color'));
     }
 
-    public function approve($id)
+    public function approve($id, Request $request)
     {
         $student = Student::findOrFail($id);
         if ($student->enrollment->status === 'Pending Review') {

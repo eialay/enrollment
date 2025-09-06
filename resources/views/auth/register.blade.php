@@ -24,7 +24,7 @@
                 <div class="md:flex gap-2">
                     <x-form.text name="email" label="Email" required />
                     <x-form.text name="contact" label="Contact Number" required maxLength="11"/>
-                    <x-form.date name="birthdate" label="Birthdate" required pattern="\\d{4}-\\d{2}-\\d{2}" placeholder="YYYY-MM-DD" />
+                    <x-form.date name="birthdate" label="Birthdate" required pattern="\d{4}-\d{2}-\d{2}" placeholder="YYYY-MM-DD" :value="old('birthdate', \Carbon\Carbon::now()->subYears(16)->format('Y-m-d'))" />
                 </div>
 
                 <div class="md:flex gap-2">
