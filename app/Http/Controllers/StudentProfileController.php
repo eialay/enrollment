@@ -10,6 +10,16 @@ use App\Models\User;
 
 class StudentProfileController extends Controller
 {
+    public function show($id)
+    {
+        $student = Student::findOrFail($id);
+
+        // Status color maps from config
+        $color = config('enrollment.enrollment_status_colors')[$student->enrollment->status ] ?? 'gray';
+
+        return view('student.details', compact('student', 'color'));
+    }
+    
     public function edit()
     {
         $student = Auth::user()->student;
@@ -63,13 +73,13 @@ class StudentProfileController extends Controller
             }
         }
         $student->save();
-        
+
         // If enrollment status is rejected, set to Pending Review
         if ($student->enrollment && $student->enrollment->status === 'Rejected') {
             $student->enrollment->status = 'Pending Review';
             $student->enrollment->remarks = null;
             $student->enrollment->save();
         }
-        return redirect()->back()->with('success', 'Profile updated successfully!');
+        return redirect()->route('students.show', ['id' => $student->id])->with('success', 'Profile updated successfully!');
     }
 }

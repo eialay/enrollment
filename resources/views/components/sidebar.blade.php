@@ -12,7 +12,7 @@
                 <nav class="flex-1">
                     <div class="mb-4">
                         <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider px-2 mb-1">Main</p>
-                        <a href="/dashboard" class="sidebar-item flex items-center px-2 py-3 rounded-lg font-medium {{ request()->is('dashboard') ? 'active bg-indigo-100 text-indigo-700 font-bold' : 'text-gray-700' }}">
+                        <a href="/dashboard" class="sidebar-item flex items-center px-2 py-3 rounded-lg {{ request()->is('dashboard') ? 'active bg-indigo-100 text-indigo-700 font-bold' : 'text-gray-700' }}">
                             <i class="fas fa-tachometer-alt mr-3 {{ request()->is('dashboard') ? 'text-indigo-700' : 'text-gray-500' }}"></i>
                             <span>Dashboard</span>
                         </a>
@@ -29,7 +29,7 @@
                     </div>
                     <div class="mb-4">
                         <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider px-2 mb-1">Operations</p>
-                        <a href="#" class="sidebar-item flex items-center px-2 py-2 rounded-lg mb-1 {{ request()->is('payments*') ? 'active bg-indigo-100 text-indigo-700' : 'text-gray-700' }}">
+                        <a href="{{route('payments.list')}}" class="sidebar-item flex items-center px-2 py-2 rounded-lg mb-1 {{ request()->is('payments*') ? 'active bg-indigo-100 text-indigo-700' : 'text-gray-700' }}">
                             <i class="fas fa-money-bill-wave mr-3 w-5 text-center {{ request()->is('payments*') ? 'text-indigo-700' : 'text-gray-500' }}"></i>
                             <span>Payments</span>
                         </a>
@@ -39,8 +39,8 @@
                     <div>
                         <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider px-2 mb-1">Account</p>
                         @if(Auth::user()->role->name === 'Student' && Auth::user()->student)
-                            <a href="{{ route('students.show', Auth::user()->student->id) }}" class="sidebar-item flex items-center px-2 py-2 rounded-lg mb-1 {{ request()->is('enrollment/' . Auth::user()->student->id) ? 'active bg-indigo-100 text-indigo-700' : 'text-gray-700' }}">
-                                <i class="fas fa-id-card mr-3 w-5 text-center {{ request()->is('enrollment/' . Auth::user()->student->id) ? 'text-indigo-700' : 'text-gray-500' }}"></i>
+                            <a href="{{ route('students.show', Auth::user()->student->id) }}" class="sidebar-item flex items-center px-2 py-2 rounded-lg mb-1 {{ request()->is('student/' . Auth::user()->student->id) ? 'active bg-indigo-100 text-indigo-700' : 'text-gray-700' }}">
+                                <i class="fas fa-id-card mr-3 w-5 text-center {{ request()->is('student/' . Auth::user()->student->id) ? 'text-indigo-700' : 'text-gray-500' }}"></i>
                                 <span>My Student Info</span>
                             </a>
                         @else

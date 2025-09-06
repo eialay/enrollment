@@ -20,20 +20,10 @@ class EnrollmentController extends Controller
         $students = $query->get();
         $statuses = Enrollment::select('status')->distinct()->pluck('status');
 
-    // Status color maps from config
-    $statusColors = config('enrollment.enrollment_status_colors');
-
-    return view('enrollment_list', compact('students', 'statuses', 'status', 'statusColors'));
-    }
-
-    public function show($id)
-    {
-        $student = Student::findOrFail($id);
-
         // Status color maps from config
-        $color = config('enrollment.enrollment_status_colors')[$student->enrollment->status ] ?? 'gray';
+        $statusColors = config('enrollment.enrollment_status_colors');
 
-        return view('student.details', compact('student', 'color'));
+        return view('enrollment_list', compact('students', 'statuses', 'status', 'statusColors'));
     }
 
     public function approve($id, Request $request)

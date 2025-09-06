@@ -8,9 +8,25 @@ use App\Models\Payment;
 
 class PaymentController extends Controller
 {
+    public function index(Request $request)
+    {
+        $query = Payment::with(['student.user'])->orderByDesc('updated_at');
+        if ($request->filled('status')) {
+            $query->where('status', $request->input('status'));
+        }
+        $payments = $query->get();
+        return view('payments_list', compact('payments'));
+    }
+
     public function show()
     {
         return view('payments');
+    }
+
+    public function showDetails($id)
+    {
+        $payment = Payment::with(['student.user'])->findOrFail($id);
+        return view('payment_details', compact('payment'));
     }
 
     public function settle(Request $request)
@@ -31,8 +47,42 @@ class PaymentController extends Controller
         $payment->paid_amount += $amount;
         if ($payment->paid_amount >= $payment->balance) {
             $payment->status = 'Paid';
+            // Also update enrollment status to Paid
+            if ($payment->student && $payment->student->enrollment) {
+                $payment->student->enrollment->status = 'Paid';
+                $payment->student->enrollment->save();
+            }
         }
         $payment->save();
         return redirect()->back()->with('success', 'Payment successful!');
+    }
+
+    public function approve(Request $request, $id)
+    {
+        $user = Auth::user();
+        $payment = Payment::findOrFail($id);
+        $payment->status = 'Approved';
+        $payment->remarks = $request->input('remarks', 'Approved by cashier');
+        $payment->save();
+        if ($payment->student && $payment->student->enrollment) {
+            $payment->student->enrollment->status = 'Enrolled';
+            $payment->student->enrollment->save();
+        }
+        return redirect()->back()->with('success', 'Payment approved.');
+    }
+
+    public function reject(Request $request, $id)
+    {
+        $user = Auth::user();
+        $payment = Payment::findOrFail($id);
+        $payment->status = 'Rejected';
+        $payment->remarks = $request->input('remarks', 'Rejected by cashier');
+        $payment->save();
+        // Optionally update enrollment status
+        // if ($payment->student && $payment->student->enrollment) {
+        //     $payment->student->enrollment->status = 'Rejected';
+        //     $payment->student->enrollment->save();
+        // }
+        return redirect()->back()->with('success', 'Payment rejected.');
     }
 }

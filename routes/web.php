@@ -26,18 +26,22 @@ Route::get('/dashboard', [DashboardController::class, 'index'])->middleware('aut
 
 // Enrollment routes
 Route::get('/enrollment', [EnrollmentController::class, 'index'])->middleware('auth')->name('enrollment.index');
-Route::get('/enrollment/{id}', [EnrollmentController::class, 'show'])->middleware('auth')->name('students.show');
 Route::post('/enrollment/{id}/approve', [EnrollmentController::class, 'approve'])->middleware('auth')->name('students.approve');
 Route::post('/enrollment/{id}/reject', [EnrollmentController::class, 'reject'])->middleware('auth')->name('students.reject');
 
 // Payments routes
 Route::middleware(['auth'])->group(function () {
     Route::get('/payments', [PaymentController::class, 'show'])->name('payments.show');
+    Route::get('/payments/list', [PaymentController::class, 'index'])->name('payments.list');
+    Route::get('/payments/{id}', [PaymentController::class, 'showDetails'])->name('payments.details');
     Route::post('/payments/settle', [PaymentController::class, 'settle'])->name('payments.settle');
+    Route::post('/payments/{id}/approve', [PaymentController::class, 'approve'])->name('payments.approve');
+    Route::post('/payments/{id}/reject', [PaymentController::class, 'reject'])->name('payments.reject');
 });
 
 // Student profile edit routes
 Route::middleware(['auth'])->group(function () {
-    Route::get('/student/edit', [StudentProfileController::class, 'edit'])->name('students.edit');
-    Route::post('/student/update', [StudentProfileController::class, 'update'])->name('students.update');
+    Route::get('/student/{id}', [StudentProfileController::class, 'show'])->name('students.show');
+    Route::get('/student/{id}/edit', [StudentProfileController::class, 'edit'])->name('students.edit');
+    Route::post('/student/{id}/update', [StudentProfileController::class, 'update'])->name('students.update');
 });
