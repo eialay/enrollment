@@ -24,20 +24,21 @@
                 <div class="md:flex gap-2">
                     <x-form.text name="email" label="Email" required />
                     <x-form.text name="contact" label="Contact Number" required maxLength="11"/>
-                    <x-form.text name="birthdate" label="Birthdate" required />
+                    <x-form.date name="birthdate" label="Birthdate" required pattern="\d{4}-\d{2}-\d{2}" placeholder="YYYY-MM-DD" :value="old('birthdate', \Carbon\Carbon::now()->subYears(16)->format('Y-m-d'))" />
                 </div>
 
                 <div class="md:flex gap-2">
                     <x-form.password name="password" label="Password" required />
                     <x-form.password name="password_confirmation" label="Confirm Password" required />
-                    <div id="passwordError" class="text-red-600 text-sm" style="display:none;"></div>
                 </div>
+                <div id="passwordError" class="text-red-600 text-sm text-center" style="display:none;"></div>
 
                 <x-form.text name="address" label="Address" required />
 
                 <h3 class="font-bold text-blue-900 mt-12 uppercase">Documents</h3>
                 <div class="md:flex gap-2">
-                    <x-form.file name="birthCertificate" label="Birth Certificate" helpText="PSA" />
+                    <x-form.file name="studentImage" label="Student Image" helpText="Upload a recent photo" required />
+                    <x-form.file name="birthCertificate" label="Birth Certificate" helpText="PSA" required />
                     <x-form.file name="form137" label="Form 137" helpText=""/>
                     <x-form.file name="goodMoral" label="Good Moral" />
                     <x-form.file name="reportCard" label="Report Card" />

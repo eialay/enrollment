@@ -3,9 +3,9 @@
         {{ $title }}
     </x-slot>
 
-    <div class="flex h-screen bg-gray-100">
+    <div class="flex h-full bg-gray-100">
         <!-- Sidebar -->
-        <aside class="w-64 bg-white shadow-md flex flex-col justify-between">
+    <aside class="w-64 bg-white shadow-md flex flex-col justify-between h-screen sticky top-0">
             <div class="p-6">
                 <h2 class="text-2xl font-bold text-blue-900 mb-6">Enrollment System</h2>
                 <!-- Menu -->
@@ -38,10 +38,17 @@
 
                     <div>
                         <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider px-2 mb-1">Account</p>
-                        <a href="#" class="sidebar-item flex items-center px-2 py-2 rounded-lg mb-1 {{ request()->is('profile') ? 'active bg-indigo-100 text-indigo-700' : 'text-gray-700' }}">
-                            <i class="fas fa-user mr-3 w-5 text-center {{ request()->is('profile') ? 'text-indigo-700' : 'text-gray-500' }}"></i>
-                            <span>Profile</span>
-                        </a>
+                        @if(Auth::user()->role->name === 'Student' && Auth::user()->student)
+                            <a href="{{ route('students.show', Auth::user()->student->id) }}" class="sidebar-item flex items-center px-2 py-2 rounded-lg mb-1 {{ request()->is('enrollment/' . Auth::user()->student->id) ? 'active bg-indigo-100 text-indigo-700' : 'text-gray-700' }}">
+                                <i class="fas fa-id-card mr-3 w-5 text-center {{ request()->is('enrollment/' . Auth::user()->student->id) ? 'text-indigo-700' : 'text-gray-500' }}"></i>
+                                <span>My Student Info</span>
+                            </a>
+                        @else
+                            <a href="#" class="sidebar-item flex items-center px-2 py-2 rounded-lg mb-1 {{ request()->is('profile') ? 'active bg-indigo-100 text-indigo-700' : 'text-gray-700' }}">
+                                <i class="fas fa-user mr-3 w-5 text-center {{ request()->is('profile') ? 'text-indigo-700' : 'text-gray-500' }}"></i>
+                                <span>Profile</span>
+                            </a>
+                        @endif
                         <a href="/logout" class="sidebar-item flex items-center px-2 py-2 text-gray-700 rounded-lg mb-1">
                             <i class="fas fa-sign-out-alt mr-3 w-5 text-center text-gray-500"></i>
                             <span>Log Out</span>
@@ -54,7 +61,14 @@
             <div class="p-4 border-t border-gray-200">
                 <div class="flex items-center p-3 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow">
                     <div class="relative">
-                        <img src="https://placehold.co/40x40" alt="Admin profile" class="rounded-full mr-3 border-2 border-indigo-200">
+                        @php
+                            $user = Auth::user();
+                            $profileImage = 'https://placehold.co/40x40';
+                            if ($user->role->name === 'Student' && $user->student && $user->student->studentImage) {
+                                $profileImage = asset('storage/' . $user->student->studentImage);
+                            }
+                        @endphp
+                        <img src="{{ $profileImage }}" alt="Profile image" class="w-10 h-10 object-cover rounded-full mr-3 border-2 border-indigo-200">
                         <span class="absolute bottom-0 right-3 h-3 w-3 bg-green-500 rounded-full border-2 border-white"></span>
                     </div>
                     <div class="flex-1">

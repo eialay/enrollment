@@ -17,6 +17,7 @@ class Student extends Model
         'contact',
         'birthdate',
         'address',
+        'studentImage',
         'birthCertificate',
         'form137',
         'goodMoral',
@@ -29,9 +30,17 @@ class Student extends Model
         'guardianRelationship',
         'guardianAddress',
     ];
+    public function payment()
+    {
+        return $this->hasOne(Payment::class);
+    }
     public function enrollment()
     {
         return $this->hasOne(Enrollment::class);
+    }
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
     public function getFormattedIdAttribute()
     {

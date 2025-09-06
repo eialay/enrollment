@@ -27,7 +27,8 @@ class RegisterController extends Controller
             'contact' => 'required|string|max:255',
             'birthdate' => 'required|date',
             'address' => 'required|string|max:255',
-            'birthCertificate' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
+            'studentImage' => 'required|file|mimes:jpg,jpeg,png|max:2048',
+            'birthCertificate' => 'required|file|mimes:pdf,jpg,jpeg,png|max:2048',
             'form137' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
             'goodMoral' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
             'reportCard' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
@@ -62,8 +63,12 @@ class RegisterController extends Controller
             'guardianRelationship' => $validated['guardianRelationship'],
             'guardianAddress' => $validated['guardianAddress'],
         ];
+        // Handle student image upload
+        if ($request->hasFile('studentImage')) {
+            $studentData['studentImage'] = $request->file('studentImage')->store('student_images', 'public');
+        }
 
-        foreach(['birthCertificate', 'form137', 'goodMoral', 'reportCard'] as $fileField) {
+    foreach(['birthCertificate', 'form137', 'goodMoral', 'reportCard'] as $fileField) {
             if ($request->hasFile($fileField)) {
                 $studentData[$fileField] = $request->file($fileField)->store('documents', 'public');
             }

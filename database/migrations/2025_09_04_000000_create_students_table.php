@@ -19,7 +19,8 @@ return new class extends Migration {
             $table->string('contact');
             $table->date('birthdate');
             $table->string('address');
-            $table->string('birthCertificate')->nullable();
+            $table->string('studentImage');
+            $table->string('birthCertificate');
             $table->string('form137')->nullable();
             $table->string('goodMoral')->nullable();
             $table->string('reportCard')->nullable();
@@ -30,8 +31,6 @@ return new class extends Migration {
             $table->string('guardianContact');
             $table->string('guardianRelationship');
             $table->string('guardianAddress');
-            $table->string('status')->default('Pending Review');
-            $table->string('remarks')->nullable();
             $table->timestamps();
             
             // $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
