@@ -8,7 +8,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EnrollmentController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\StudentProfileController;
-
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\OcrController;
 
 Route::get('/', function () {
@@ -29,8 +29,6 @@ Route::post('password/email', [ResetPasswordController::class, 'sendResetLinkEma
 Route::get('password/reset/{token}', [ResetPasswordController::class, 'showResetForm'])->name('password.reset');
 Route::post('password/reset', [ResetPasswordController::class, 'reset'])->name('password.update');
 
-
-
 Route::get('/dashboard', [DashboardController::class, 'index'])->middleware('auth')->name('dashboard');
 
 // Enrollment routes
@@ -49,12 +47,23 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/test-email', [PaymentController::class, 'sendTestEmail'])->name('test.email');
 });
 
-// Student profile edit routes
+// Student profile
 Route::middleware(['auth'])->group(function () {
     Route::get('/student/{id}', [StudentProfileController::class, 'show'])->name('students.show');
     Route::get('/student/{id}/edit', [StudentProfileController::class, 'edit'])->name('students.edit');
     Route::post('/student/{id}/update', [StudentProfileController::class, 'update'])->name('students.update');
 });
+
+// User Management
+Route::middleware(['auth'])->group(function () {
+    Route::get('/users', [UserController::class, 'index'])->name('users.index');
+    Route::get('/users/create', [UserController::class, 'create'])->name('users.create');
+    Route::post('/users', [UserController::class, 'store'])->name('users.store');
+    Route::get('/users/{id}/edit', [UserController::class, 'edit'])->name('users.edit');
+    Route::post('/users/{id}/update', [UserController::class, 'update'])->name('users.update');
+    Route::delete('/users/{id}', [UserController::class, 'destroy'])->name('users.destroy');
+});
+
 
 // OCR scan endpoint (no auth required for registration)
 Route::post('/ocr/scan', [OcrController::class, 'scan'])->name('ocr.scan');

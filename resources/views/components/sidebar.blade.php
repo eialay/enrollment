@@ -12,7 +12,7 @@
         </button>
 
         <!-- Sidebar -->
-        <div id="sidebar-overlay" class="fixed inset-0 bg-black bg-opacity-40 z-30 hidden md:hidden"></div>
+        <div id="sidebar-overlay" class="fixed inset-0 bg-black opacity-40 z-30 hidden md:hidden"></div>
         <aside id="sidebar" class="w-64 bg-white shadow-md flex flex-col justify-between h-screen fixed md:sticky top-0 left-0 z-40 transform -translate-x-full md:translate-x-0 transition-transform duration-200 ease-in-out md:relative md:flex md:translate-x-0">
             <div class="p-6">
                 <h2 class="text-2xl font-bold text-blue-900 mb-6">Enrollment System</h2>
@@ -32,6 +32,12 @@
                             <i class="fas fa-user-graduate mr-3 w-5 text-center {{ request()->is('enrollment*') ? 'text-indigo-700' : 'text-gray-500' }}"></i>
                             <span>Enrollment</span>
                         </a>
+                        @if(Auth::user()->role->name === 'Admin')
+                        <a href="{{ route('users.index') }}" class="sidebar-item flex items-center px-2 py-2 rounded-lg mb-1 {{ request()->is('users*') ? 'active bg-indigo-100 text-indigo-700 font-bold' : 'text-gray-700' }}">
+                            <i class="fas fa-users-cog mr-3 w-5 text-center {{ request()->is('users*') ? 'text-indigo-700' : 'text-gray-500' }}"></i>
+                            <span>User Management</span>
+                        </a>
+                        @endif
                     </div>
                     <div class="mb-4">
                         <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider px-2 mb-1">Operations</p>
