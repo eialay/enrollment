@@ -3,9 +3,17 @@
         {{ $title }}
     </x-slot>
 
-    <div class="flex h-full bg-gray-100">
+    <div class="flex h-full bg-gray-100 min-h-screen">
+        <!-- Mobile menu button -->
+        <button id="sidebar-toggle" class="md:hidden fixed top-4 left-4 z-40 bg-white p-2 rounded shadow focus:outline-none">
+            <svg class="h-6 w-6 text-blue-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+        </button>
+
         <!-- Sidebar -->
-    <aside class="w-64 bg-white shadow-md flex flex-col justify-between h-screen sticky top-0">
+        <div id="sidebar-overlay" class="fixed inset-0 bg-black bg-opacity-40 z-30 hidden md:hidden"></div>
+        <aside id="sidebar" class="w-64 bg-white shadow-md flex flex-col justify-between h-screen fixed md:sticky top-0 left-0 z-40 transform -translate-x-full md:translate-x-0 transition-transform duration-200 ease-in-out md:relative md:flex md:translate-x-0">
             <div class="p-6">
                 <h2 class="text-2xl font-bold text-blue-900 mb-6">Enrollment System</h2>
                 <!-- Menu -->
@@ -17,14 +25,12 @@
                             <span>Dashboard</span>
                         </a>
                     </div>
-                    
                     @if(Auth::user()->role->name !== 'Student')   
                     <div class="mb-4">
                         <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider px-2 mb-1">Management</p>
                         <a href="/enrollment" class="sidebar-item flex items-center px-2 py-2 rounded-lg mb-1 {{ request()->is('enrollment*') ? 'active bg-indigo-100 text-indigo-700 font-bold' : 'text-gray-700' }}">
                             <i class="fas fa-user-graduate mr-3 w-5 text-center {{ request()->is('enrollment*') ? 'text-indigo-700' : 'text-gray-500' }}"></i>
                             <span>Enrollment</span>
-                            <!-- <span class="ml-auto bg-indigo-100 text-indigo-800 text-xs px-2 py-1 rounded-full">24 New</span> -->
                         </a>
                     </div>
                     <div class="mb-4">
@@ -35,7 +41,6 @@
                         </a>
                     </div>
                     @endif
-
                     <div>
                         <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider px-2 mb-1">Account</p>
                         @if(Auth::user()->role->name === 'Student' && Auth::user()->student)
@@ -56,7 +61,6 @@
                     </div>
                 </nav>
             </div>
-
             <!-- Fixed User Profile -->
             <div class="p-4 border-t border-gray-200">
                 <div class="flex items-center p-3 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow">
@@ -80,8 +84,26 @@
         </aside>
 
         <!-- Main Content -->
-        <main class="flex-1 p-6">
+        <main class="flex-1 p-4 md:p-6 mt-16 md:mt-0 w-full">
             {{ $slot }}
         </main>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+            const toggle = document.getElementById('sidebar-toggle');
+            if (toggle && sidebar && overlay) {
+                toggle.addEventListener('click', function () {
+                    sidebar.classList.toggle('-translate-x-full');
+                    overlay.classList.toggle('hidden');
+                });
+                overlay.addEventListener('click', function () {
+                    sidebar.classList.add('-translate-x-full');
+                    overlay.classList.add('hidden');
+                });
+            }
+        });
+    </script>
 </x-app>
