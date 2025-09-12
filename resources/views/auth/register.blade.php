@@ -9,6 +9,13 @@
     >
 
         <div class="w-3/4 my-8 bg-white p-10 flex flex-col justify-center">
+            <!-- OCR Upload and Scan -->
+            <div class="mb-6 p-4 border border-blue-200 rounded bg-blue-50">
+                <label class="block font-semibold text-blue-900 mb-2">Scan ID/Document for Auto-Fill (Image or PDF)</label>
+                <input type="file" id="ocrFileInput" accept=".jpg,.jpeg,.png,.pdf" class="mb-2" />
+                <button type="button" id="scanOcrBtn" class="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700">Scan & Auto-Fill</button>
+                <div id="ocrStatus" class="text-sm text-blue-700 mt-2"></div>
+            </div>
             <h1 class="text-2xl font-bold text-blue-900 mb-6 text-center">
                 Student Registration
             </h1>
@@ -69,6 +76,48 @@
                 </button>
                 </div>
             </form>
+            <script>
+            function fillFieldsFromOcr(fields) {
+                if(fields.firstname) document.querySelector('[name="firstname"]').value = fields.firstname;
+                if(fields.middlename) document.querySelector('[name="middlename"]').value = fields.middlename;
+                if(fields.lastname) document.querySelector('[name="lastname"]').value = fields.lastname;
+                if(fields.birthdate) document.querySelector('[name="birthdate"]').value = fields.birthdate;
+                if(fields.email) document.querySelector('[name="email"]').value = fields.email;
+                if(fields.contact) document.querySelector('[name="contact"]').value = fields.contact;
+                // Add more as needed
+            }
+
+            document.getElementById('scanOcrBtn').addEventListener('click', function() {
+                var fileInput = document.getElementById('ocrFileInput');
+                var statusDiv = document.getElementById('ocrStatus');
+                if (!fileInput.files.length) {
+                    statusDiv.textContent = 'Please select an image or PDF file.';
+                    return;
+                }
+                var formData = new FormData();
+                formData.append('ocr_file', fileInput.files[0]);
+                statusDiv.textContent = 'Scanning...';
+                fetch("{{ route('ocr.scan') }}", {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
+                    },
+                    body: formData
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.fields) {
+                        fillFieldsFromOcr(data.fields);
+                        statusDiv.textContent = 'Fields auto-filled. Please review and complete the form.';
+                    } else {
+                        statusDiv.textContent = 'Could not extract fields. Raw text: ' + (data.raw_text || '');
+                    }
+                })
+                .catch(err => {
+                    statusDiv.textContent = 'OCR failed: ' + err;
+                });
+            });
+            </script>
             <script>
             function validatePasswordConfirmation() {
                 var password = document.querySelector('[name="password"]');
