@@ -50,10 +50,14 @@
                 </div>
             </form>
 
-            <p class="mt-6 text-center text-gray-600 text-sm">
-                Don’t have an account?
-                <a href="/register" class="text-blue-700 hover:underline">Sign up</a>
-            </p>
+                <div class="mt-4 text-center">
+                    <a href="{{ route('password.request') }}" class="text-blue-700 hover:underline text-sm">Forgot Password?</a>
+                </div>
+
+                <p class="mt-6 text-center text-gray-600 text-sm">
+                    New Student?
+                    <a href="/register" class="text-blue-700 hover:underline">Register Here</a>
+                </p>
         </div>
     </div>
 
