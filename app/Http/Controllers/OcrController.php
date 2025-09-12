@@ -70,7 +70,6 @@ class OcrController extends Controller
             }
         }
 
-        // Optionally, parse $fullText to extract fields (simple demo)
         $fields = [
             'firstname' => '',
             'middlename' => '',
@@ -78,25 +77,31 @@ class OcrController extends Controller
             'birthdate' => '',
             'email' => '',
             'contact' => '',
-            // Add more fields as needed
         ];
 
-        // Extract first and middle name
+        // Extract names
         if (preg_match('/1\. NAME\s*([A-Z ]+)\s*\(Middle\)\s*([A-Z]+)\s*2\. SEX/i', $fullText, $matches)) {
             $fields['firstname'] = trim($matches[1]);
             $fields['middlename'] = trim($matches[2]);
         }
-
-        // Extract last name (ONTE)
         if (preg_match('/\(18\)\s*([A-Z]+)\s*\(Month\)/i', $fullText, $matches)) {
+            $fields['lastname'] = trim($matches[1]);
+        }
+        if (preg_match('/\(First\)\s*\n?([A-Z\- ]+)/i', $fullText, $matches)) {
+            $fields['firstname'] = trim($matches[1]);
+        }
+        if (preg_match('/\(Middle\)\s*\n?([A-Z\- ]+)/i', $fullText, $matches)) {
+            $fields['middlename'] = trim($matches[1]);
+        }
+        if (preg_match('/\(Last\)\s*\n?([A-Z\- ]+)/i', $fullText, $matches)) {
             $fields['lastname'] = trim($matches[1]);
         }
 
         // Extract birthdate
         if (preg_match('/(\d{2} [A-Z]+ \d{4})/', $fullText, $matches)) {
-            $fields['birthdate'] = $matches[1];
-        }
+            $fields['birthdate'] = date('Y-m-d', strtotime($matches[1]));
 
+        }
 
 
         return response()->json([
