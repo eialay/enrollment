@@ -85,4 +85,14 @@ class PaymentController extends Controller
         // }
         return redirect()->back()->with('success', 'Payment rejected.');
     }
+
+    public function sendTestEmail()
+    {
+        $user = Auth::user();
+        \Mail::raw('This is a test email from the enrollment system.', function ($message) use ($user) {
+            $message->to('json.mamon.1990@gmail.com')
+                ->subject('Enrollment Test Email');
+        });
+        return back()->with('success', 'Test email sent to ' . 'json.mamon.1990@gmail.com');
+    }
 }

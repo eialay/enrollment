@@ -12,6 +12,14 @@
             <h1 class="text-2xl font-bold text-blue-900 mb-6 text-center">
                 Student Registration
             </h1>
+
+            <!-- OCR Upload and Scan -->
+            <div class="mb-6 p-4 border border-blue-200 rounded bg-blue-50">
+                <label class="block font-semibold text-blue-900 mb-2">Scan ID/Document for Auto-Fill (Image or PDF)</label>
+                <input type="file" id="ocrFileInput" accept=".jpg,.jpeg,.png,.pdf" class="mb-2" />
+                <button type="button" id="scanOcrBtn" class="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700">Scan & Auto-Fill</button>
+                <div id="ocrStatus" class="text-sm text-blue-700 mt-2"></div>
+            </div>
         
             <form id="registrationForm" action="{{ route('register.submit') }}" method="POST" class="space-y-6" enctype="multipart/form-data" onsubmit="return validatePasswordConfirmation();">
                 @csrf
@@ -38,10 +46,10 @@
                 <h3 class="font-bold text-blue-900 mt-12 uppercase">Documents</h3>
                 <div class="md:flex gap-2">
                     <x-form.file name="studentImage" label="Student Image" helpText="Upload a recent photo" required />
-                    <x-form.file name="birthCertificate" label="Birth Certificate" helpText="PSA" required />
-                    <x-form.file name="form137" label="Form 137" helpText=""/>
-                    <x-form.file name="goodMoral" label="Good Moral" />
-                    <x-form.file name="reportCard" label="Report Card" />
+                    <x-form.file name="birthCertificate" label="Birth Certificate (PSA)" helpText="" required />
+                    <x-form.file name="form137" label="Form 137" helpText="Optional"/>
+                    <x-form.file name="goodMoral" label="Good Moral" helpText="Optional"/>
+                    <x-form.file name="reportCard" label="Report Card" helpText="Optional"/>
                 </div>
 
                 <h3 class="font-bold text-blue-900 mt-12 uppercase">Parent/Guardian</h3>
@@ -70,21 +78,60 @@
                 </div>
             </form>
             <script>
-            function validatePasswordConfirmation() {
-                var password = document.querySelector('[name="password"]');
-                var confirm = document.querySelector('[name="password_confirmation"]');
-                var errorDiv = document.getElementById('passwordError');
-                if (password && confirm && password.value !== confirm.value) {
-                    errorDiv.textContent = 'Passwords do not match.';
-                    errorDiv.style.display = 'block';
-                    confirm.focus();
-                    return false;
-                } else {
-                    errorDiv.textContent = '';
-                    errorDiv.style.display = 'none';
-                    return true;
+                function fillFieldsFromOcr(fields) {
+                    if(fields.firstname) document.querySelector('[name="firstname"]').value = fields.firstname;
+                    if(fields.middlename) document.querySelector('[name="middlename"]').value = fields.middlename;
+                    if(fields.lastname) document.querySelector('[name="lastname"]').value = fields.lastname;
+                    if(fields.birthdate) document.querySelector('[name="birthdate"]').value = fields.birthdate;
                 }
-            }
+
+                document.getElementById('scanOcrBtn').addEventListener('click', function() {
+                    var fileInput = document.getElementById('ocrFileInput');
+                    var statusDiv = document.getElementById('ocrStatus');
+                    if (!fileInput.files.length) {
+                        statusDiv.textContent = 'Please select an image or PDF file.';
+                        return;
+                    }
+                    var formData = new FormData();
+                    formData.append('ocr_file', fileInput.files[0]);
+                    statusDiv.textContent = 'Scanning...';
+                    fetch("{{ route('ocr.scan') }}", {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
+                        },
+                        body: formData
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.fields) {
+                            fillFieldsFromOcr(data.fields);
+                            statusDiv.textContent = 'Fields auto-filled. Please review and complete the form.';
+                        } else {
+                            statusDiv.textContent = 'Could not extract fields. Raw text: ' + (data.raw_text || '');
+                        }
+                    })
+                    .catch(err => {
+                        statusDiv.textContent = 'OCR failed: ' + err;
+                    });
+                });
+            </script>
+            <script>
+                function validatePasswordConfirmation() {
+                    var password = document.querySelector('[name="password"]');
+                    var confirm = document.querySelector('[name="password_confirmation"]');
+                    var errorDiv = document.getElementById('passwordError');
+                    if (password && confirm && password.value !== confirm.value) {
+                        errorDiv.textContent = 'Passwords do not match.';
+                        errorDiv.style.display = 'block';
+                        confirm.focus();
+                        return false;
+                    } else {
+                        errorDiv.textContent = '';
+                        errorDiv.style.display = 'none';
+                        return true;
+                    }
+                }
             </script>
 
             <a href="/" class="text-blue-700 p-5 text-center hover:underline">Back to Login</a>
