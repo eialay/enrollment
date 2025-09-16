@@ -26,6 +26,8 @@ class RegisterController extends Controller
             'lastname' => 'required|string|max:255',
             'contact' => 'required|string|max:255',
             'birthdate' => 'required|date',
+            'gender' => 'required|in:Male,Female',
+            'course' => 'required|in:BSIT,BSED,BSBA',
             'address' => 'required|string|max:255',
             'studentImage' => 'required|file|mimes:jpg,jpeg,png|max:2048',
             'birthCertificate' => 'required|file|mimes:pdf,jpg,jpeg,png|max:2048',
@@ -55,6 +57,7 @@ class RegisterController extends Controller
             'lastname' => $validated['lastname'],
             'contact' => $validated['contact'],
             'birthdate' => $validated['birthdate'],
+            'gender' => $validated['gender'],
             'address' => $validated['address'],
             'guardianFName' => $validated['guardianFName'],
             'guardianMName' => $validated['guardianMName'],
@@ -77,10 +80,18 @@ class RegisterController extends Controller
 
         $student = Student::create($studentData);
 
+        
+
+        // Generate enrollment reference code (e.g., ENR-<year>-<student_id>)
+        $enrollmentReference = 'ENR-' . date('Y') . '-' . $student->id;
+
         // Insert into enrollments table
         Enrollment::create([
             'student_id' => $student->id,
             'status' => 'Pending Review',
+            'course' => $validated['course'],
+            'school_year' => date('Y').'-'.(date('Y') + 1), // Current to next year
+            'reference_code' => $enrollmentReference,
         ]);
 
         Auth::login($user);

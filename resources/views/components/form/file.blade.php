@@ -1,6 +1,17 @@
+@props([
+    'name',
+    'label' => '',
+    'required' => false,
+    'helpText' => '',
+])
 <div class="w-full mb-4">
     
-    <label class="block text-blue-900 font-semibold mb-1" for="{{$name}}">{{ $label }}</label>
+    <label class="block text-blue-900 font-semibold mb-1" for="{{$name}}">
+        {{ $label }}
+        @if($required)
+            <span class="text-red-600">*</span>
+        @endif
+    </label>
     <input 
         type="file"
         id="{{$name}}"

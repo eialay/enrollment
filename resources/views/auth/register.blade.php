@@ -8,21 +8,21 @@
         style="background-image: linear-gradient(rgba(250, 250, 250, 0.937), rgba(8, 52, 117, 0.942)), url('../assets/img/img.jpg');"
     >
 
-        <div class="w-3/4 my-8 bg-white p-10 flex flex-col justify-center">
+        <div class="md:w-3/4 my-8 bg-white p-10 flex flex-col justify-center">
             <h1 class="text-2xl font-bold text-blue-900 mb-6 text-center">
                 Student Registration
             </h1>
-
-            <!-- OCR Upload and Scan -->
-            <div class="mb-6 p-4 border border-blue-200 rounded bg-blue-50">
-                <label class="block font-semibold text-blue-900 mb-2">Scan ID/Document for Auto-Fill (Image or PDF)</label>
-                <input type="file" id="ocrFileInput" accept=".jpg,.jpeg,.png,.pdf" class="mb-2" />
-                <button type="button" id="scanOcrBtn" class="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700">Scan & Auto-Fill</button>
-                <div id="ocrStatus" class="text-sm text-blue-700 mt-2"></div>
-            </div>
         
             <form id="registrationForm" action="{{ route('register.submit') }}" method="POST" class="space-y-6" enctype="multipart/form-data" onsubmit="return validatePasswordConfirmation();">
                 @csrf
+
+                <h3 class="font-bold text-blue-900 mt-12 uppercase">Primary Documents</h3>
+                <div class="md:flex gap-2">
+                    <x-form.file name="birthCertificate" label="Birth Certificate (PSA)" helpText="" required />
+                    <x-form.file name="studentImage" label="ID Picture" helpText="Upload a recent photo" required />
+                </div>
+
+                <h3 class="font-bold text-blue-900 mt-12 uppercase">Student Information</h3>
                 <div class="md:flex gap-2">
                     <x-form.text name="firstname" label="First Name" required />
                     <x-form.text name="middlename" label="Middle Name" required />
@@ -30,9 +30,17 @@
                 </div>
 
                 <div class="md:flex gap-2">
-                    <x-form.text name="email" label="Email" required />
-                    <x-form.text name="contact" label="Contact Number" required maxLength="11"/>
+                    <x-form.select name="gender" label="Gender" required :options="['Male' => 'Male', 'Female' => 'Female']" />
                     <x-form.date name="birthdate" label="Birthdate" required pattern="\d{4}-\d{2}-\d{2}" placeholder="YYYY-MM-DD" :value="old('birthdate', \Carbon\Carbon::now()->subYears(16)->format('Y-m-d'))" />
+                </div>
+                
+                <div class="md:flex gap-2">
+                    <x-form.select name="course" label="Course" required :options="['BSIT' => 'BS Information Technology', 'BSED' => 'BS Education', 'BSBA' => 'BS Business Administration']" />
+                </div>
+
+                <div class="md:flex gap-2">
+                    <x-form.text name="contact" label="Contact Number" required maxLength="11"/>
+                    <x-form.text name="email" label="Email" required />
                 </div>
 
                 <div class="md:flex gap-2">
@@ -43,16 +51,14 @@
 
                 <x-form.text name="address" label="Address" required />
 
-                <h3 class="font-bold text-blue-900 mt-12 uppercase">Documents</h3>
+                <h3 class="font-bold text-blue-900 mt-12 uppercase">Secondary Documents</h3>
                 <div class="md:flex gap-2">
-                    <x-form.file name="studentImage" label="Student Image" helpText="Upload a recent photo" required />
-                    <x-form.file name="birthCertificate" label="Birth Certificate (PSA)" helpText="" required />
-                    <x-form.file name="form137" label="Form 137" helpText="Optional"/>
-                    <x-form.file name="goodMoral" label="Good Moral" helpText="Optional"/>
-                    <x-form.file name="reportCard" label="Report Card" helpText="Optional"/>
+                    <x-form.file name="form137" label="Form 137" />
+                    <x-form.file name="goodMoral" label="Good Moral" />
+                    <x-form.file name="reportCard" label="Report Card" />
                 </div>
 
-                <h3 class="font-bold text-blue-900 mt-12 uppercase">Parent/Guardian</h3>
+                <h3 class="font-bold text-blue-900 mt-12 uppercase">Parent/Guardian Information</h3>
                 <div class="md:flex gap-2">
                     <x-form.text name="guardianFName" label="First Name" required />
                     <x-form.text name="guardianMName" label="Middle Name" required />
@@ -85,9 +91,9 @@
                     if(fields.birthdate) document.querySelector('[name="birthdate"]').value = fields.birthdate;
                 }
 
-                document.getElementById('scanOcrBtn').addEventListener('click', function() {
-                    var fileInput = document.getElementById('ocrFileInput');
-                    var statusDiv = document.getElementById('ocrStatus');
+                document.getElementById('birthCertificate').addEventListener('change', function() {
+                    var fileInput = document.getElementById('birthCertificate');
+                    var statusDiv = document.getElementById('birthCertificate_help');
                     if (!fileInput.files.length) {
                         statusDiv.textContent = 'Please select an image or PDF file.';
                         return;

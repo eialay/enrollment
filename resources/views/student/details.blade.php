@@ -25,7 +25,7 @@
                 <div class="flex flex-row items-center">
                     <div class="flex-shrink-0 flex flex-col items-center justify-center h-full mr-6">
                         @php
-                            $studentImageUrl = $student->studentImage ? asset('storage/' . $student->studentImage) : 'https://placehold.co/120x120';
+                            $studentImageUrl = $student->studentImage ? asset('storage/' . $student->studentImage) : '/img/default-dp.jpg';
                         @endphp
                         <a href="{{ $studentImageUrl }}" target="_blank">
                             <img src="{{ $studentImageUrl }}" alt="Student Image" class="w-24 h-24 object-cover rounded-lg border-4 border-white shadow hover:opacity-90 transition">

@@ -73,7 +73,7 @@
                     <div class="relative">
                         @php
                             $user = Auth::user();
-                            $profileImage = 'https://placehold.co/40x40';
+                            $profileImage = '/img/default-dp.jpg';
                             if ($user->role->name === 'Student' && $user->student && $user->student->studentImage) {
                                 $profileImage = asset('storage/' . $user->student->studentImage);
                             }

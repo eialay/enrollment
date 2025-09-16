@@ -30,5 +30,17 @@
             @endforeach
         </div>
         @endif
+        
+        @if(isset($student) && isset($student->enrollment) && $student->enrollment->status === 'Pending Review')
+            <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-6" role="alert">
+                <div class="font-bold mb-2">Next Steps</div>
+                <ul class="list-disc pl-5">
+                    <li>Your enrollment is currently <strong>Pending Review</strong>.</li>
+                    <li>Head over to the Registrar's office, show your reference code and bring your physical documents for further review.</li>
+                    <li>You will be notified once your status changes.</li>
+                    <li>If you need to update your information, visit your profile page.</li>
+                </ul>
+            </div>
+        @endif
     </div>
 </x-sidebar>

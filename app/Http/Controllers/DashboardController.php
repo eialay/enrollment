@@ -64,6 +64,15 @@ class DashboardController extends Controller
                             'link' => route('students.show', $studentRecord->id)
                         ],
                     ];
+
+                    if($status === 'Pending Review') {
+                        $data['cards'][] = [
+                            'title' => 'Enrollment Reference Code', 
+                            'value' => $studentRecord->enrollment->reference_code, 
+                            'icon' => 'fa-id-card', 
+                            'color' => 'blue',
+                        ];
+                    }
                 }
                 break;
             default:

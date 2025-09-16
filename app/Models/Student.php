@@ -16,6 +16,7 @@ class Student extends Model
         'lastname',
         'contact',
         'birthdate',
+        'gender',
         'address',
         'studentImage',
         'birthCertificate',
