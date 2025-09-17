@@ -6,9 +6,70 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Payment;
 use App\Http\Controllers\EmailController;
+use \App\Models\PaymentQueue;
+use App\Models\Student;
 
 class PaymentController extends Controller
 {
+    public function queueList()
+    {
+        $queueList = PaymentQueue::with(['student.user', 'payment'])
+        ->orderBy('created_at', 'asc')
+            ->get();
+            return view('payments_queue_list', compact('queueList'));
+        }
+    public function cashier()
+    {
+        $student = Auth::user()->student;
+        $queueNumber = null;
+        if ($student) {
+            $queue = PaymentQueue::where('student_id', $student->id)
+            ->orderByDesc('created_at')
+            ->first();
+            if ($queue) {
+                $queueNumber = $queue->queue_number;
+            }
+        }
+        
+        $queueList = PaymentQueue::where('status', 'Waiting')
+        ->orderBy('created_at')
+        ->limit(10)
+        ->get();
+        return view('payments_cashier', compact('queueNumber', 'queueList'));
+    }
+    
+    public function getQueueNumber(Request $request)
+    {
+        $student = Student::where('user_id', Auth::id())->first();
+        if (!$student) {
+            return redirect()->route('dashboard')->with('error', 'Student record not found.');
+        }
+        
+        // Generate a unique queue number
+        $queueNumber = 'Q' . rand(1000, 9999);
+        // Store in DB
+        $queue = PaymentQueue::create([
+            'student_id' => $student->id,
+            'payment_reference_code' => $student->payment->reference_code,
+            'queue_number' => $queueNumber,
+            'status' => 'Waiting',
+        ]);
+        
+        EmailController::sendEmail(
+            ['student' => $student->user->email ?? null],
+            'Payment Queue Number',
+            "Hello,\n\nYour payment queue number is: $queueNumber\n\nPlease wait for your number to be called for payment processing.\n\nThank you."
+        );
+        
+        return redirect()->route('payments.cashier');
+    }
+    public function deleteQueue($id)
+    {
+        $queue = PaymentQueue::findOrFail($id);
+        $queue->delete();
+        return redirect()->route('payments.queueList')->with('success', 'Queue record deleted successfully.');
+    }
+    
     public function index(Request $request)
     {
         $query = Payment::with(['student.user'])->orderByDesc('updated_at');
@@ -68,7 +129,10 @@ class PaymentController extends Controller
     public function showDetails($id)
     {
         $payment = Payment::with(['student.user'])->findOrFail($id);
-        return view('payment_details', compact('payment'));
+        $queue = PaymentQueue::where('payment_reference_code', $payment->reference_code)
+            ->orderByDesc('created_at')
+            ->first();
+        return view('payment_details', compact('payment', 'queue'));
     }
 
     public function approve(Request $request, $id)
@@ -98,6 +162,17 @@ class PaymentController extends Controller
             if ($payment->student && $payment->student->enrollment) {
                 $payment->student->enrollment->status = 'Enrolled';
                 $payment->student->enrollment->save();
+
+
+                //Delete the queue entry if exists
+                $queue = PaymentQueue::where('payment_reference_code', $payment->reference_code)
+                    ->where('status', 'Waiting')
+                    ->orderBy('created_at')
+                    ->first();
+                
+                if ($queue) {
+                    $queue->delete();
+                }
 
                 // Notify student and guardian that enrollment is now Enrolled
                 $student = $payment->student;

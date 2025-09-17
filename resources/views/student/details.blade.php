@@ -37,11 +37,16 @@
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">                        
                         <!-- Student Info Fields -->
                         <div class="font-bold text-lg text-blue-900 mb-1 col-span-3">{{ $student->firstname }} {{ $student->middlename }} {{ $student->lastname }}</div>
+                        @if($student->enrollment->status === 'Enrolled')
                         <div class="text-xs text-gray-600  col-span-2 md:col-span-1">Student ID: {{ $student->formatted_id }}</div>
+                            <div class="text-xs text-gray-600 col-span-2 md:col-span-1">Enrollment Date: {{ $student->enrollment->created_at->format('m/d/Y') }}</div>
+                        @endif
                         <div class="text-xs text-gray-600 col-span-2 md:col-span-1">Course: {{ $student->enrollment->course ?? '-' }}</div>
                         <div class="text-xs text-gray-600 col-span-2 md:col-span-1">Grade Level: {{ $student->enrollment->grade_level ?? '-' }}</div>
                         <div class="text-xs text-gray-600 col-span-2 md:col-span-1">School Year: {{ $student->enrollment->school_year ?? '-' }}</div>
-                        <div class="text-xs text-gray-600 col-span-2 md:col-span-1">Birthdate: {{ $student->birthdate ?? '-' }}</div>
+                        <div class="text-xs text-gray-600 col-span-2 md:col-span-1">
+                            Birthdate: {{ $student->birthdate ? \Carbon\Carbon::parse($student->birthdate)->format('m/d/Y') : '-' }}
+                        </div>
                         <div class="text-xs text-gray-600 col-span-2 md:col-span-1">Gender: {{ $student->gender ?? '-' }}</div>
                         <div class="text-xs text-gray-600 col-span-2 md:col-span-1">Email: {{ $student->user->email ?? '-' }}</div>
                         <div class="text-xs text-gray-600 col-span-2 md:col-span-1">Contact: {{ $student->contact ?? '-' }}</div>
@@ -121,7 +126,9 @@
                         </div>
                     </form>
                 @elseif(Auth::user()->role->name === 'Student' && $student->id === Auth::user()->student->id)
-                    <a href="{{ route('students.edit', $student->id) }}" class="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">Edit</a>
+                    @if($student->enrollment->status === 'Rejected' || $student->enrollment->status === 'Pending Review')
+                        <a href="{{ route('students.edit', $student->id) }}" class="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">Edit</a>
+                    @endif
                     <a href="{{ route('dashboard') }}" class="px-6 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-700 hover:text-white transition">Back</a>
                 @else
                     <a href="{{ route('enrollment.index') }}" class="px-6 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-700 hover:text-white transition">Back to List</a>

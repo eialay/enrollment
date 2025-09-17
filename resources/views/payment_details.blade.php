@@ -24,6 +24,12 @@
                 <span class="font-semibold">Payment Reference Code:</span>
                 <span>{{ $payment->reference_code ?? 'N/A' }}</span>
             </div>
+            @if($queue)
+            <div class="mb-4">
+                <span class="font-semibold">Queue Number:</span>
+                <span>{{ $queue->queue_number }}</span>
+            </div>
+            @endif
             <div class="mb-4">
                 <span class="font-semibold">Student Name:</span>
                 <span>{{ $payment->student->user->name ?? 'N/A' }}</span>
@@ -59,7 +65,7 @@
         </div>
         <div class="justify-center mt-8">
             <div class="w-full max-w-xl bg-gray-50 rounded-lg shadow p-6">
-                @if(auth()->user() && auth()->user()->role->name === 'Cashier' && $payment->status === 'Pending Approval')
+                @if(auth()->user() && auth()->user()->role->name === 'Cashier' && ($payment->status === 'Pending Approval' || $queue))
                 <form method="POST" action="" class="mb-4 flex flex-col gap-2">
                         @csrf
                         <div>

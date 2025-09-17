@@ -56,11 +56,33 @@ class DatabaseSeeder extends Seeder
         \DB::table('enrollments')->insert([
             [
                 'student_id' => 1,
-                'reference_code' => 'ENR24' . str_pad(mt_rand(0, 999999), 6, '0', STR_PAD_LEFT),
-                'status' => 'Pending Review',
+                'reference_code' => 'ENR24123456',
+                'status' => 'Pending Payment',
                 'grade_level' => '10',
                 'school_year' => '2024-2025',
                 'course' => 'BSIT',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+        ]);
+
+        \DB::table('payments')->insert([
+            [
+                'student_id' => 1,
+                'reference_code' => 'PAY24123456',
+                'balance' => 2000.00,
+                'status' => 'Unpaid',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+        ]);
+
+        \DB::table('payment_queue')->insert([
+            [
+                'student_id' => 1,
+                'payment_reference_code' => 'PAY24123456',
+                'queue_number' => 'Q1234',
+                'status' => 'Waiting',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],

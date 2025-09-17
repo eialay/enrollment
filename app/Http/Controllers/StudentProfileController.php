@@ -22,9 +22,15 @@ class StudentProfileController extends Controller
     
     public function edit($id)
     {
-        $student = Auth::user()->student;
-        if (Auth::user()->role->name === 'Student' && !$student) {
-            abort(404);
+        if (Auth::user()->role->name == 'Student') {
+            $student = Auth::user()->student;
+            $user = Auth::user();
+            if (!$student) {
+                abort(404);
+            }
+        } else {
+            $student = Student::findOrFail($id);
+            $user = $student->user;
         }
 
         $student = Student::findOrFail($id);
@@ -34,11 +40,17 @@ class StudentProfileController extends Controller
 
     public function update(Request $request)
     {
-        $student = Auth::user()->student;
-        $user = Auth::user();
-        if (!$student) {
-            abort(404);
-        }
+        // if (Auth::user()->role->name == 'Student') {
+        //     $student = Auth::user()->student;
+        //     $user = Auth::user();
+        //     if (!$student) {
+        //         abort(404);
+        //     }
+        // } else {
+        // }
+        $student = Student::findOrFail($request->input('id'));
+        $user = $student->user;
+        
         $validated = $request->validate([
             'firstname' => 'required|string|max:255',
             'middlename' => 'required|string|max:255',

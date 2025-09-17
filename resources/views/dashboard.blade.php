@@ -53,7 +53,7 @@
                     </ul>
                     <div class="flex gap-4">
                         <a href="{{ route('payments.show') }}" class="px-6 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition">Pay Online</a>
-                        <a href="#" class="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">Pay at Cashier</a>
+                            <a href="{{ route('payments.cashier') }}" class="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">Pay at Cashier</a>
                     </div>
                 </div>
                 @elseif($student->payment && in_array($student->payment->status, ['Pending Approval', 'Partial']))
@@ -67,6 +67,14 @@
                     </ul>
                 </div>
                 @endif
+            @elseif($student->enrollment->status === 'Enrolled')
+            <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-6" role="alert">
+                <div class="font-bold mb-2">Congratulations!</div>
+                <p>Your enrollment is <strong>Enrolled</strong>. Welcome aboard!</p>
+                <div class="mt-4">
+                    <a href="{{ route('students.show', $student->id) }}" class="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">View Student Details</a>
+                </div>
+            </div>
             @endif
         @endif
     </div>
