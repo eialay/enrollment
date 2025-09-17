@@ -1,5 +1,16 @@
+@props([
+    'name',
+    'label' => '',
+    'required' => false,
+    'helpText' => '',
+])
 <div class="w-full">
-    <label for="{{$name}}" class="block text-blue-900 font-semibold mb-1">{{ $label }}</label>
+    <label for="{{$name}}" class="block text-blue-900 font-semibold mb-1">
+        {{ $label }}
+        @if($required)
+            <span class="text-red-600">*</span>
+        @endif
+    </label>
     <input
         type="date"
         id="{{$name}}"

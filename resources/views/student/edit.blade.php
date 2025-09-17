@@ -18,20 +18,23 @@
                 </div>
             @endif
 
-
-            <div class="w-full max-w-3xl bg-white rounded-lg shadow-lg p-8 text-xs">
-                <h1 class="text-2xl font-bold text-blue-900 mb-6 text-center">
-                    Edit Student Details
-                </h1>
+            <h2 class="text-2xl font-bold mb-6">Edit Student Details</h2>
+            <div class="w-full max-w-3xl bg-white rounded-lg shadow-lg p-8">
                     <div class="md:flex gap-2">
                         <x-form.text name="firstname" label="First Name" required :value="old('firstname', $student->firstname)" />
                         <x-form.text name="middlename" label="Middle Name" required :value="old('middlename', $student->middlename)" />
                         <x-form.text name="lastname" label="Last Name" required :value="old('lastname', $student->lastname)" /> 
                     </div>
                     <div class="md:flex gap-2">
-                        <x-form.text name="email" label="Email" required :value="old('email', $student->user->email)" />
-                        <x-form.text name="contact" label="Contact Number" required maxLength="11" :value="old('contact', $student->contact)"/>
+                        <x-form.select name="gender" label="Gender" required :options="['Male' => 'Male', 'Female' => 'Female']" :value="old('gender', $student->gender)" />
                         <x-form.date name="birthdate" label="Birthdate" required pattern="\d{4}-\d{2}-\d{2}" placeholder="YYYY-MM-DD" :value="old('birthdate', $student->birthdate)" />
+                    </div>
+                    <div class="md:flex gap-2">
+                        <x-form.select name="course" label="Course" required :options="['BSIT' => 'BS Information Technology', 'BSED' => 'BS Education', 'BSBA' => 'BS Business Administration']" :value="old('course', $student->enrollment->course ?? '')" />
+                    </div>
+                    <div class="md:flex gap-2">
+                        <x-form.text name="contact" label="Contact Number" required maxLength="11" :value="old('contact', $student->contact)"/>
+                        <x-form.text name="email" label="Email" required :value="old('email', $student->user->email)" />
                     </div>
                     <div class="md:flex gap-2">
                         <x-form.password name="password" label="Password (leave blank to keep current)" />

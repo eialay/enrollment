@@ -11,6 +11,7 @@ return [
     'payment_status_colors' => [
         'Unpaid' => 'red',
         'Partial' => 'yellow',
+        'Pending Approval' => 'yellow',
         'Paid' => 'green',
         'Approved' => 'green',
     ],

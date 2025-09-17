@@ -20,22 +20,37 @@ class StudentProfileController extends Controller
         return view('student.details', compact('student', 'color'));
     }
     
-    public function edit()
+    public function edit($id)
     {
-        $student = Auth::user()->student;
-        if (!$student) {
-            abort(404);
+        if (Auth::user()->role->name == 'Student') {
+            $student = Auth::user()->student;
+            $user = Auth::user();
+            if (!$student) {
+                abort(404);
+            }
+        } else {
+            $student = Student::findOrFail($id);
+            $user = $student->user;
         }
+
+        $student = Student::findOrFail($id);
+
         return view('student.edit', compact('student'));
     }
 
     public function update(Request $request)
     {
-        $student = Auth::user()->student;
-        $user = Auth::user();
-        if (!$student) {
-            abort(404);
-        }
+        // if (Auth::user()->role->name == 'Student') {
+        //     $student = Auth::user()->student;
+        //     $user = Auth::user();
+        //     if (!$student) {
+        //         abort(404);
+        //     }
+        // } else {
+        // }
+        $student = Student::findOrFail($request->input('id'));
+        $user = $student->user;
+        
         $validated = $request->validate([
             'firstname' => 'required|string|max:255',
             'middlename' => 'required|string|max:255',
@@ -43,6 +58,8 @@ class StudentProfileController extends Controller
             'email' => 'required|email|max:255',
             'contact' => 'required|string|max:255',
             'birthdate' => 'required|date',
+            'gender' => 'required|in:Male,Female',
+            'course' => 'required|in:BSIT,BSED,BSBA',
             'address' => 'required|string|max:255',
             'studentImage' => 'nullable|file|mimes:jpg,jpeg,png|max:2048',
             'birthCertificate' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
@@ -66,6 +83,11 @@ class StudentProfileController extends Controller
         $user->save();
         // Update student fields
         $student->fill($validated);
+        // Update course in enrollment
+        if ($student->enrollment) {
+            $student->enrollment->course = $validated['course'];
+            $student->enrollment->save();
+        }
         // Handle file uploads
         foreach(['studentImage', 'birthCertificate', 'form137', 'goodMoral', 'reportCard'] as $fileField) {
             if ($request->hasFile($fileField)) {

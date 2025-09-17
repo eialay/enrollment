@@ -12,9 +12,11 @@ return new class extends Migration {
     {
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
+            $table->string('reference_code')->unique()->nullable();
             $table->unsignedBigInteger('student_id');
             $table->decimal('balance', 10, 2)->default(0);
             $table->decimal('paid_amount', 10, 2)->default(0);
+            $table->string('receipt_path')->nullable();
             $table->string('status');
             $table->string('remarks')->nullable();
             $table->unsignedBigInteger('reviewed_by')->nullable();

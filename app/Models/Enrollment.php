@@ -19,6 +19,10 @@ class Enrollment extends Model
         'enrollment_approved_at',
         'payment_approved_by',
         'payment_approved_at',
+        'course',
+        'school_year',
+        'grade_level',
+        'reference_code',
     ];
 
     public function student()

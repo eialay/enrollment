@@ -18,6 +18,7 @@ return new class extends Migration {
             $table->string('lastname');
             $table->string('contact');
             $table->date('birthdate');
+            $table->string('gender');
             $table->string('address');
             $table->string('studentImage');
             $table->string('birthCertificate');

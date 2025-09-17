@@ -41,9 +41,13 @@
                     </div>
                     <div class="mb-4">
                         <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider px-2 mb-1">Operations</p>
-                        <a href="{{route('payments.list')}}" class="sidebar-item flex items-center px-2 py-2 rounded-lg mb-1 {{ request()->is('payments*') ? 'active bg-indigo-100 text-indigo-700' : 'text-gray-700' }}">
-                            <i class="fas fa-money-bill-wave mr-3 w-5 text-center {{ request()->is('payments*') ? 'text-indigo-700' : 'text-gray-500' }}"></i>
+                        <a href="{{route('payments.list')}}" class="sidebar-item flex items-center px-2 py-2 rounded-lg mb-1 {{ request()->is('payments/list') ? 'active bg-indigo-100 text-indigo-700' : 'text-gray-700' }}">
+                            <i class="fas fa-money-bill-wave mr-3 w-5 text-center {{ request()->is('payments/list') ? 'text-indigo-700' : 'text-gray-500' }}"></i>
                             <span>Payments</span>
+                        </a>
+                        <a href="{{route('payments.queueList')}}" class="sidebar-item flex items-center px-2 py-2 rounded-lg mb-1 {{ request()->is('payments/queue-list') ? 'active bg-indigo-100 text-indigo-700' : 'text-gray-700' }}">
+                            <i class="fas fa-list-ol mr-3 w-5 text-center {{ request()->is('payments/queue-list') ? 'text-indigo-700' : 'text-gray-500' }}"></i>
+                            <span>Payment Queue</span>
                         </a>
                     </div>
                     @endif
@@ -73,7 +77,7 @@
                     <div class="relative">
                         @php
                             $user = Auth::user();
-                            $profileImage = 'https://placehold.co/40x40';
+                            $profileImage = '/img/default-dp.jpg';
                             if ($user->role->name === 'Student' && $user->student && $user->student->studentImage) {
                                 $profileImage = asset('storage/' . $user->student->studentImage);
                             }

@@ -38,13 +38,19 @@ Route::post('/enrollment/{id}/reject', [EnrollmentController::class, 'reject'])-
 
 // Payments routes
 Route::middleware(['auth'])->group(function () {
-    Route::get('/payments', [PaymentController::class, 'show'])->name('payments.show');
+    Route::get('/payments/online', [PaymentController::class, 'show'])->name('payments.show');
+    Route::get('/payments/cashier', [PaymentController::class, 'cashier'])->name('payments.cashier');
     Route::get('/payments/list', [PaymentController::class, 'index'])->name('payments.list');
+    Route::get('/payments/queue-list', [PaymentController::class, 'queueList'])->name('payments.queueList');
     Route::get('/payments/{id}', [PaymentController::class, 'showDetails'])->name('payments.details');
     Route::post('/payments/settle', [PaymentController::class, 'settle'])->name('payments.settle');
+    Route::post('/payments/upload', [PaymentController::class, 'upload'])->name('payments.upload');
     Route::post('/payments/{id}/approve', [PaymentController::class, 'approve'])->name('payments.approve');
     Route::post('/payments/{id}/reject', [PaymentController::class, 'reject'])->name('payments.reject');
+    Route::delete('/payments/queue/{id}', [PaymentController::class, 'deleteQueue'])->name('payments.queueDelete');
     Route::get('/test-email', [PaymentController::class, 'sendTestEmail'])->name('test.email');
+
+    Route::post('/payments/cashier/queue', [PaymentController::class, 'getQueueNumber'])->name('payments.queue');
 });
 
 // Student profile
