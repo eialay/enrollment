@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Student;
 use App\Models\Enrollment;
+use App\Models\Payment;
 
 class DashboardController extends Controller
 {
@@ -38,13 +39,14 @@ class DashboardController extends Controller
 
                 break;
             case 'Cashier':
-                $paidCount = Enrollment::where('status', 'Paid')->count();
+                $unpaidCount = Payment::where('status', 'Unpaid')->count();
+                $forApprovalCount = Payment::where('status', 'Pending Approval')->count();
+                $paidCount = Payment::where('status', 'Paid')->count();
 
                 $data['cards'] = [
-                    ['title' => 'Paid', 'value' => $paidCount, 'icon' => 'fa-check-circle', 'color' => 'teal', 'link' => route('payments.list', ['status' => 'Paid'])],
-                    [ 'title' => 'Pending Payment', 'value' => $pendingPaymentCount, 'icon' => 'fa-wallet', 'color' => 'orange', 'link' => route('enrollment.index', ['status' => 'Pending Payment']) ],
-                    [ 'title' => 'Enrolled Students', 'value' => $enrolledCount, 'icon' => 'fa-user-check', 'color' => 'green', 'link' => route('enrollment.index', ['status' => 'Enrolled'])    ],
-                    [ 'title' => 'Total Students ('.date('Y').')' , 'value' => $studentCount, 'icon' => 'fa-users', 'color' => 'blue', 'link' => route('enrollment.index')  ],
+                    ['title' => 'Unpaid', 'value' => $unpaidCount, 'icon' => 'fa-times-circle', 'color' => 'red', 'link' => route('payments.list', ['status' => 'Unpaid']) ],
+                    ['title' => 'For Approval', 'value' => $forApprovalCount, 'icon' => 'fa-clock', 'color' => 'yellow', 'link' => route('payments.list', ['status' => 'Pending Approval']) ],
+                    ['title' => 'Paid', 'value' => $paidCount, 'icon' => 'fa-check-circle', 'color' => 'green', 'link' => route('payments.list', ['status' => 'Paid']) ],
                 ];
 
                 break;
@@ -73,6 +75,18 @@ class DashboardController extends Controller
                             'color' => 'blue',
                         ];
                     }
+                }
+
+                if ( $studentRecord && $studentRecord->payment) {
+                    $paymentStatus = $studentRecord->payment->status;
+                    $paymentStatusColors = config('enrollment.payment_status_colors');
+
+                    $data['cards'][] = [
+                        'title' => 'Payment Status',
+                        'value' => $paymentStatus,
+                        'icon' => 'fa-receipt',
+                        'color' => $paymentStatusColors[$paymentStatus] ?? 'yellow',                        
+                    ];
                 }
                 break;
             default:

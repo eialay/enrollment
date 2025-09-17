@@ -10,11 +10,13 @@ class Payment extends Model
     use HasFactory;
 
     protected $fillable = [
+        'reference_code',
         'student_id',
         'balance',
         'paid_amount',
         'status',
         'remarks',
+        'receipt_path',
         'reviewed_by',
         'reviewed_at',
     ];

@@ -10,7 +10,7 @@ return new class extends Migration {
         Schema::create('enrollments', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('student_id');
-            $table->string('reference_code')->->unique()->nullable();
+            $table->string('reference_code')->unique()->nullable();
             $table->string('status')->nullable();
             $table->string('grade_level')->nullable();
             $table->string('school_year')->nullable();

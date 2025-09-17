@@ -22,8 +22,8 @@
         <div class="w-full max-w-3xl bg-white rounded-lg shadow-lg p-8">
             <!-- Row 1: Student ID Card (Uniform Design) -->
             <div class="bg-gray-50 border border-gray-200 rounded-lg shadow p-6 mb-6">
-                <div class="flex flex-row items-center">
-                    <div class="flex-shrink-0 flex flex-col items-center justify-center h-full mr-6">
+                <div class="flex flex-col sm:flex-row items-center sm:items-start">
+                    <div class="flex-shrink-0 flex flex-col items-center justify-center h-full mb-4 sm:mb-0 sm:mr-6">
                         @php
                             $studentImageUrl = $student->studentImage ? asset('storage/' . $student->studentImage) : '/img/default-dp.jpg';
                         @endphp
@@ -34,13 +34,17 @@
                             {{ $student->enrollment->status }}
                         </span>
                     </div>
-                    <div class="flex-1 grid grid-cols-1 md:grid-cols-2 gap-2">                        
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">                        
                         <!-- Student Info Fields -->
-                        <div class="font-bold text-lg text-blue-900 mb-1 col-span-2">{{ $student->firstname }} {{ $student->middlename }} {{ $student->lastname }}</div>
-                        <div class="text-xs text-gray-600">Student ID: {{ $student->formatted_id }}</div>
-                        <div class="text-xs text-gray-600">Birthdate: {{ $student->birthdate ?? '-' }}</div>
-                        <div class="text-xs text-gray-600">Email: {{ $student->user->email ?? '-' }}</div>
-                        <div class="text-xs text-gray-600">Contact: {{ $student->contact ?? '-' }}</div>
+                        <div class="font-bold text-lg text-blue-900 mb-1 col-span-3">{{ $student->firstname }} {{ $student->middlename }} {{ $student->lastname }}</div>
+                        <div class="text-xs text-gray-600  col-span-2 md:col-span-1">Student ID: {{ $student->formatted_id }}</div>
+                        <div class="text-xs text-gray-600 col-span-2 md:col-span-1">Course: {{ $student->enrollment->course ?? '-' }}</div>
+                        <div class="text-xs text-gray-600 col-span-2 md:col-span-1">Grade Level: {{ $student->enrollment->grade_level ?? '-' }}</div>
+                        <div class="text-xs text-gray-600 col-span-2 md:col-span-1">School Year: {{ $student->enrollment->school_year ?? '-' }}</div>
+                        <div class="text-xs text-gray-600 col-span-2 md:col-span-1">Birthdate: {{ $student->birthdate ?? '-' }}</div>
+                        <div class="text-xs text-gray-600 col-span-2 md:col-span-1">Gender: {{ $student->gender ?? '-' }}</div>
+                        <div class="text-xs text-gray-600 col-span-2 md:col-span-1">Email: {{ $student->user->email ?? '-' }}</div>
+                        <div class="text-xs text-gray-600 col-span-2 md:col-span-1">Contact: {{ $student->contact ?? '-' }}</div>
                         <div class="text-xs text-gray-600 col-span-2">Address: {{ $student->address ?? '-' }}</div>
                         @if($student->enrollment->status === 'Rejected' && !empty($student->enrollment->remarks))
                             <div class="col-span-2 mt-2 text-xs">
@@ -112,15 +116,12 @@
                         <div class="flex gap-2 mb-4">
                             <button type="submit" formaction="{{ route('students.approve', $student->id) }}" class="px-6 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition">Approve</button>
                             <button type="submit" formaction="{{ route('students.reject', $student->id) }}" class="px-6 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition">Reject</button>
+                            <a href="{{ route('students.edit', $student->id) }}" class="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">Edit</a>
                             <a href="{{ route('enrollment.index') }}" class="px-6 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-700 hover:text-white transition">Back to List</a>
                         </div>
                     </form>
                 @elseif(Auth::user()->role->name === 'Student' && $student->id === Auth::user()->student->id)
-                    @if($student->enrollment->status === 'Pending Payment')
-                        <a href="{{ route('payments.show') }}" class="px-6 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition">Pay Now</a>
-                    @else
-                        <a href="{{ route('students.edit', $student->id) }}" class="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">Edit</a>
-                    @endif
+                    <a href="{{ route('students.edit', $student->id) }}" class="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">Edit</a>
                     <a href="{{ route('dashboard') }}" class="px-6 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-700 hover:text-white transition">Back</a>
                 @else
                     <a href="{{ route('enrollment.index') }}" class="px-6 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-700 hover:text-white transition">Back to List</a>
