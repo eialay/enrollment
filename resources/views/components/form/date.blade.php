@@ -16,6 +16,7 @@
         id="{{$name}}"
         name="{{$name}}"
         class="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        {{ $required ? 'required' : '' }}
         {{ $attributes }}
     />
 </div>

@@ -73,7 +73,7 @@ class RegisterController extends Controller
             $studentData['studentImage'] = $request->file('studentImage')->store('student_images', 'public');
         }
 
-    foreach(['birthCertificate', 'form137', 'goodMoral', 'reportCard'] as $fileField) {
+        foreach(['birthCertificate', 'form137', 'goodMoral', 'reportCard'] as $fileField) {
             if ($request->hasFile($fileField)) {
                 $studentData[$fileField] = $request->file($fileField)->store('documents', 'public');
             }
