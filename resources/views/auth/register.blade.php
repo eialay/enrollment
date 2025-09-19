@@ -12,7 +12,17 @@
             <h1 class="text-2xl font-bold text-blue-900 mb-6 text-center">
                 Student Registration
             </h1>
-        
+
+            @if ($errors->any())
+                <div class="mb-4">
+                    <ul class="text-red-600 text-sm">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+            
             <form id="registrationForm" action="{{ route('register.submit') }}" method="POST" class="space-y-6" enctype="multipart/form-data" onsubmit="return validatePasswordConfirmation();">
                 @csrf
 
