@@ -57,6 +57,7 @@
                 <p class="mt-6 text-center text-gray-600 text-sm">
                     New Student?
                     <a href="/register" class="text-blue-700 hover:underline">Register Here</a>
+                    <span style="display: none;">test</span>
                 </p>
         </div>
     </div>
