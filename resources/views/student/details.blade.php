@@ -50,6 +50,7 @@
                             {{ $student->enrollment->status }}
                         </span>
                     </div>
+                    <!-- TEST -->
 
                     <!-- Info -->
                     <div class="flex-1 grid grid-cols-1 md:grid-cols-3 gap-3">
