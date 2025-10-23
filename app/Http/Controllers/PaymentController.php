@@ -60,6 +60,8 @@ class PaymentController extends Controller
             'Payment Queue Number',
             "Hello,\n\nYour payment queue number is: $queueNumber\n\nPlease wait for your number to be called for payment processing.\n\nThank you."
         );
+
+        //test
         
         return redirect()->route('payments.cashier');
     }
