@@ -12,7 +12,7 @@ return new class extends Migration {
             $table->unsignedBigInteger('student_id');
             $table->string('reference_code')->unique()->nullable();
             $table->string('status')->nullable();
-            $table->string('grade_level')->nullable();
+            $table->string('year_level')->nullable();
             $table->string('school_year')->nullable();
             $table->string('course')->nullable();
             $table->text('remarks')->nullable();
