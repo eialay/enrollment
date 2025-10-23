@@ -26,10 +26,18 @@
             <form id="registrationForm" action="{{ route('register.submit') }}" method="POST" class="space-y-6" enctype="multipart/form-data" onsubmit="return validatePasswordConfirmation();">
                 @csrf
 
+                <h3 class="font-bold text-blue-900 mt-12 uppercase">Enrollment Information</h3>
+                <div class="md:flex gap-2">
+                    <x-form.select name="admissionType" label="Admission Type" required :options="['Freshmen' => 'Freshmen', 'Transferee' => 'Transferee', 'Returnee' => 'Returnee']" />
+                    <x-form.select name="course" label="Course" required :options="['BSIT' => 'BS Information Technology', 'BSED' => 'BS Education', 'BSBA' => 'BS Business Administration']" />
+                    <x-form.select name="yearLevel" label="Year Level" required :options="['firstYear' => 'First Year', 'secondYear' => 'Second Year', 'thirdYear' => 'Third Year', 'fourthYear' => 'Fourth Year']" />
+                </div>
+
                 <h3 class="font-bold text-blue-900 mt-12 uppercase">Primary Documents</h3>
                 <div class="md:flex gap-2">
-                    <x-form.file name="birthCertificate" label="Birth Certificate (PSA)" helpText="" required />
-                    <x-form.file name="studentImage" label="ID Picture" helpText="Upload a recent photo" required />
+                    <x-form.file name="reportCard" label="Report Card" />
+                    <x-form.file name="tor" label="Transcript of Records" />
+                    <x-form.file name="studentImage" label="Passport Size ID Picture" helpText="(White Background, Formal Attire)" required />
                 </div>
 
                 <h3 class="font-bold text-blue-900 mt-12 uppercase">Student Information</h3>
@@ -42,33 +50,45 @@
                 <div class="md:flex gap-2">
                     <x-form.select name="gender" label="Gender" required :options="['Male' => 'Male', 'Female' => 'Female']" />
                     <x-form.date name="birthdate" label="Birthdate" required pattern="\d{4}-\d{2}-\d{2}" placeholder="YYYY-MM-DD" :value="old('birthdate', \Carbon\Carbon::now()->subYears(16)->format('Y-m-d'))" />
-                </div>
-                
-                <div class="md:flex gap-2">
-                    <x-form.select name="course" label="Course" required :options="['BSIT' => 'BS Information Technology', 'BSED' => 'BS Education', 'BSBA' => 'BS Business Administration']" />
-                </div>
-
-                <div class="md:flex gap-2">
                     <x-form.text name="contact" label="Contact Number" required maxLength="11"/>
-                    <x-form.text name="email" label="Email" required />
                 </div>
 
                 <div class="md:flex gap-2">
+                    <x-form.text name="email" label="Email" required />
                     <x-form.password name="password" label="Password" required />
                     <x-form.password name="password_confirmation" label="Confirm Password" required />
                 </div>
                 <div id="passwordError" class="text-red-600 text-sm text-center" style="display:none;"></div>
 
-                <x-form.text name="address" label="Address" required />
+                <div class="md:flex gap-2">
+                    <x-form.text name="address" label="Address" required />
+                    <x-form.text name="baranggay" label="Baranggay" required />
+                    <x-form.text name="city" label="Municipality/City" required />
+                    <x-form.text name="province" label="Province" required />
+                </div>
+
 
                 <h3 class="font-bold text-blue-900 mt-12 uppercase">Secondary Documents</h3>
                 <div class="md:flex gap-2">
                     <x-form.file name="form137" label="Form 137" />
+                    <x-form.file name="honDismissal" label="Honorable Dismissal" />
                     <x-form.file name="goodMoral" label="Good Moral" />
-                    <x-form.file name="reportCard" label="Report Card" />
+                    <x-form.file name="birthCertificate" label="Birth Certificate (PSA)" />
+                    <x-form.file name="brgyClearance" label="Baranggay Clearance" />
                 </div>
 
                 <h3 class="font-bold text-blue-900 mt-12 uppercase">Parent/Guardian Information</h3>
+                <div class="md:flex gap-2">
+                    <x-form.text name="fatherFName" label="Father's First Name" required />
+                    <x-form.text name="fatherMName" label="Father's Middle Name" required />
+                    <x-form.text name="fatherLName" label="Father's Last Name" required /> 
+                    <x-form.text name="fatherSuffix" label="Father's Suffix" />
+                </div>
+                <div class="md:flex gap-2">
+                    <x-form.text name="motherFName" label="Mother's First Name" required />
+                    <x-form.text name="motherMName" label="Mother's Middle Name" required />
+                    <x-form.text name="motherLName" label="Mother's Last Name" required /> 
+                </div>
                 <div class="md:flex gap-2">
                     <x-form.text name="guardianFName" label="First Name" required />
                     <x-form.text name="guardianMName" label="Middle Name" required />
@@ -81,7 +101,19 @@
                 </div>
                 <x-form.text name="guardianAddress" label="Address" required />
 
-
+                <h3 class="font-bold text-blue-900 mt-12 uppercase">Educational Background</h3>
+                <div class="md:flex gap-2">
+                    <x-form.text name="primarySchool" label="Primary School" required />
+                    <x-form.text name="primarySchoolYearGraduated" label="Year Graduated" required maxLength="4"/>
+                </div>
+                <div class="md:flex gap-2">
+                    <x-form.text name="secondarySchool" label="Secondary School" required />
+                    <x-form.text name="secondarySchoolYearGraduated" label="Year Graduated" required maxLength="4"/>
+                </div>
+                <div class="md:flex gap-2">
+                    <x-form.text name="lastSchoolAttended" label="Last School Attended" required />
+                    <x-form.text name="lastSchoolAttendedYearGraduated" label="Year Graduated" required maxLength="4"/>
+                </div>
             
                 <!-- Submit -->
                 <div>
