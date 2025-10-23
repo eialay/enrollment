@@ -8,16 +8,12 @@
         <!-- Header Section -->
         <div class="bg-gradient-to-r from-blue-700 to-indigo-800 text-white rounded-xl shadow-lg p-6 mb-8 flex flex-col sm:flex-row justify-between items-center">
             <div>
-                <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight mb-2">Enrollment Management Dashboard</h1>
+                <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight mb-2">
+                    Enrollment Management Dashboard
+                </h1>
                 <p class="text-blue-100 text-sm sm:text-base">
                     Welcome to your student enrollment control center — manage, monitor, and track everything here.
                 </p>
-            </div>
-            <div class="mt-4 sm:mt-0">
-                <a href="{{ route('logout') }}"
-                    class="bg-white text-blue-800 font-semibold px-5 py-2 rounded-lg shadow hover:bg-gray-100 transition-all duration-300 transform hover:scale-105">
-                    Logout
-                </a>
             </div>
         </div>
 

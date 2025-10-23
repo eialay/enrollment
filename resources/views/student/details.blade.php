@@ -1,124 +1,129 @@
 <x-sidebar>
     <x-slot:title>
-        Dashboard
+        Student Dashboard
     </x-slot>
 
-    <div class="h-full flex flex-col items-center justify-center">
-        @if(session('success'))
-            <div class="w-full max-w-3xl mb-4">
-                <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
+    <div class="min-h-screen py-10 px-4 sm:px-8 bg-gradient-to-br from-blue-50 via-white to-blue-100 font-sans animate-fadeIn">
+
+        <!-- Header Section -->
+        <div class="bg-gradient-to-r from-blue-700 to-indigo-800 text-white rounded-xl shadow-lg p-6 mb-8 flex flex-col sm:flex-row justify-between items-center animate-slideDown">
+            <div>
+                <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight mb-2">Enrollment Management System</h1>
+                <p class="text-blue-100 text-sm sm:text-base">Student Profile Overview & Enrollment Status</p>
+            </div>
+            <a href="{{ route('dashboard') }}" 
+               class="mt-4 sm:mt-0 bg-white text-blue-700 font-semibold px-5 py-2 rounded-lg shadow hover:bg-gray-100 transition-all duration-300 transform hover:scale-105">
+               Back to Dashboard
+            </a>
+        </div>
+
+        <!-- Alerts -->
+        <div class="max-w-4xl mx-auto space-y-4">
+            @if(session('success'))
+                <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative animate-fadeIn" role="alert">
                     <span class="block sm:inline">{{ session('success') }}</span>
                 </div>
-            </div>
-        @endif
-        @if(session('error'))
-            <div class="w-full max-w-3xl mb-4">
-                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+            @endif
+            @if(session('error'))
+                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative animate-fadeIn" role="alert">
                     <span class="block sm:inline">{{ session('error') }}</span>
                 </div>
-            </div>
-        @endif
-        <h2 class="text-2xl font-bold mb-6">Student Details</h2>
-        <div class="w-full max-w-3xl bg-white rounded-lg shadow-lg p-8">
-            <!-- Row 1: Student ID Card (Uniform Design) -->
-            <div class="bg-gray-50 border border-gray-200 rounded-lg shadow p-6 mb-6">
-                <div class="flex flex-col sm:flex-row items-center sm:items-start">
-                    <div class="flex-shrink-0 flex flex-col items-center justify-center h-full mb-4 sm:mb-0 sm:mr-6">
+            @endif
+        </div>
+
+        <!-- Student Information -->
+        <div class="max-w-5xl mx-auto mt-8 space-y-8">
+
+            <!-- Student Card -->
+            <div class="bg-white border border-gray-200 rounded-2xl shadow-xl p-8 transition transform hover:scale-[1.01] duration-300 animate-slideUp">
+                <div class="flex flex-col sm:flex-row items-center gap-6">
+                    <!-- Profile Image -->
+                    <div class="flex flex-col items-center">
                         @php
                             $studentImageUrl = $student->studentImage ? asset('storage/' . $student->studentImage) : '/img/default-dp.jpg';
                         @endphp
                         <a href="{{ $studentImageUrl }}" target="_blank">
-                            <img src="{{ $studentImageUrl }}" alt="Student Image" class="w-24 h-24 object-cover rounded-lg border-4 border-white shadow hover:opacity-90 transition">
+                            <img src="{{ $studentImageUrl }}" alt="Student Image" 
+                                 class="w-28 h-28 object-cover rounded-full border-4 border-blue-200 shadow-md hover:shadow-lg transition">
                         </a>
-                        <span class="mt-2 inline-block px-2 py-1 rounded-full text-xs font-semibold bg-{{ $color }}-100 text-{{ $color }}-800 align-middle">
+                        <span class="mt-3 inline-block px-3 py-1 rounded-full text-xs font-semibold bg-{{ $color ?? 'blue' }}-100 text-{{ $color ?? 'blue' }}-800">
                             {{ $student->enrollment->status }}
                         </span>
                     </div>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">                        
-                        <!-- Student Info Fields -->
-                        <div class="font-bold text-lg text-blue-900 mb-1 col-span-3">{{ $student->firstname }} {{ $student->middlename }} {{ $student->lastname }}</div>
-                        @if($student->enrollment->status === 'Enrolled')
-                        <div class="text-xs text-gray-600  col-span-2 md:col-span-1">Student ID: {{ $student->formatted_id }}</div>
-                            <div class="text-xs text-gray-600 col-span-2 md:col-span-1">Enrollment Date: {{ $student->enrollment->created_at->format('m/d/Y') }}</div>
-                        @endif
-                        <div class="text-xs text-gray-600 col-span-2 md:col-span-1">Course: {{ $student->enrollment->course ?? '-' }}</div>
-                        <div class="text-xs text-gray-600 col-span-2 md:col-span-1">Grade Level: {{ $student->enrollment->grade_level ?? '-' }}</div>
-                        <div class="text-xs text-gray-600 col-span-2 md:col-span-1">School Year: {{ $student->enrollment->school_year ?? '-' }}</div>
-                        <div class="text-xs text-gray-600 col-span-2 md:col-span-1">
-                            Birthdate: {{ $student->birthdate ? \Carbon\Carbon::parse($student->birthdate)->format('m/d/Y') : '-' }}
-                        </div>
-                        <div class="text-xs text-gray-600 col-span-2 md:col-span-1">Gender: {{ $student->gender ?? '-' }}</div>
-                        <div class="text-xs text-gray-600 col-span-2 md:col-span-1">Email: {{ $student->user->email ?? '-' }}</div>
-                        <div class="text-xs text-gray-600 col-span-2 md:col-span-1">Contact: {{ $student->contact ?? '-' }}</div>
-                        <div class="text-xs text-gray-600 col-span-2">Address: {{ $student->address ?? '-' }}</div>
+
+                    <!-- Info -->
+                    <div class="flex-1 grid grid-cols-1 md:grid-cols-3 gap-3">
+                        <h2 class="text-xl md:col-span-3 font-bold text-blue-900 mb-1">{{ $student->firstname }} {{ $student->middlename }} {{ $student->lastname }}</h2>
+                        <p class="text-sm text-gray-700 col-span-1">Student ID: <strong>{{ $student->formatted_id ?? 'N/A' }}</strong></p>
+                        <p class="text-sm text-gray-700 col-span-1">Course: <strong>{{ $student->enrollment->course ?? '-' }}</strong></p>
+                        <p class="text-sm text-gray-700 col-span-1">Grade Level: <strong>{{ $student->enrollment->grade_level ?? '-' }}</strong></p>
+                        <p class="text-sm text-gray-700 col-span-1">School Year: <strong>{{ $student->enrollment->school_year ?? '-' }}</strong></p>
+                        <p class="text-sm text-gray-700 col-span-1">Birthdate: <strong>{{ $student->birthdate ? \Carbon\Carbon::parse($student->birthdate)->format('m/d/Y') : '-' }}</strong></p>
+                        <p class="text-sm text-gray-700 col-span-1">Gender: <strong>{{ $student->gender ?? '-' }}</strong></p>
+                        <p class="text-sm text-gray-700 col-span-1">Email: <strong>{{ $student->user->email ?? '-' }}</strong></p>
+                        <p class="text-sm text-gray-700 col-span-1">Contact: <strong>{{ $student->contact ?? '-' }}</strong></p>
+                        <p class="text-sm text-gray-700 col-span-3">Address: <strong>{{ $student->address ?? '-' }}</strong></p>
+
                         @if($student->enrollment->status === 'Rejected' && !empty($student->enrollment->remarks))
-                            <div class="col-span-2 mt-2 text-xs">
-                                <span class="font-bold text-red-700">Remarks:</span>
-                                <span class=" text-red-700">{{ $student->enrollment->remarks }}</span>
+                            <div class="col-span-3 mt-2 text-sm text-red-700 font-medium bg-red-50 border-l-4 border-red-500 p-3 rounded-md">
+                                Remarks: {{ $student->enrollment->remarks }}
                             </div>
-                        @endif                    
-                    </div>
-                </div>
-            </div>
-
-            <!-- Row 2: Documents -->
-            <div class="bg-gray-50 border border-gray-200 rounded-lg shadow p-6 mb-6">
-                <h3 class="font-bold text-lg text-blue-900 mb-4">Documents</h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div class="text-xs text-gray-600"><span class="font-bold">Birth Certificate:</span>
-                        @if(!empty($student->birthCertificate))
-                            <a href="{{ asset('storage/' . $student->birthCertificate) }}" target="_blank" class="ml-2 inline-block px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 transition text-xs">View</a>
-                        @else
-                            Not uploaded
-                        @endif
-                    </div>
-                    <div class="text-xs text-gray-600"><span class="font-bold">Form 137:</span>
-                        @if(!empty($student->form137))
-                            <a href="{{ asset('storage/' . $student->form137) }}" target="_blank" class="ml-2 inline-block px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 transition text-xs">View</a>
-                        @else
-                            Not uploaded
-                        @endif
-                    </div>
-                    <div class="text-xs text-gray-600"><span class="font-bold">Good Moral:</span>
-                        @if(!empty($student->goodMoral))
-                            <a href="{{ asset('storage/' . $student->goodMoral) }}" target="_blank" class="ml-2 inline-block px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 transition text-xs">View</a>
-                        @else
-                            Not uploaded
-                        @endif
-                    </div>
-                    <div class="text-xs text-gray-600"><span class="font-bold">Report Card:</span>
-                        @if(!empty($student->reportCard))
-                            <a href="{{ asset('storage/' . $student->reportCard) }}" target="_blank" class="ml-2 inline-block px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 transition text-xs">View</a>
-                        @else
-                            Not uploaded
                         @endif
                     </div>
                 </div>
             </div>
 
-            <!-- Row 3: Parent/Guardian Details -->
-            <div class="bg-gray-50 border border-gray-200 rounded-lg shadow p-6">
-                <h3 class="font-bold text-lg text-blue-900 mb-4">Parent/Guardian</h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div class="text-xs text-gray-600"><span class="font-bold">Name:</span> {{ $student->guardianFName ?? '-' }} {{ $student->guardianMName ?? '' }} {{ $student->guardianLName ?? '' }}</div>
-                    <div class="text-xs text-gray-600"><span class="font-bold">Email:</span> {{ $student->guardianEmail ?? '-' }}</div>
-                    <div class="text-xs text-gray-600"><span class="font-bold">Contact Number:</span> {{ $student->guardianContact ?? '-' }}</div>
-                    <div class="text-xs text-gray-600"><span class="font-bold">Relationship:</span> {{ $student->guardianRelationship ?? '-' }}</div>
-                    <div class="text-xs text-gray-600 md:col-span-2"><span class="font-bold">Address:</span> {{ $student->guardianAddress ?? '-' }}</div>
-                </div>
-            </div>
-        </div>
-
-        <div class="justify-center mt-8">
-            <div class="w-full max-w-xl bg-gray-50 rounded-lg shadow p-6">
-                @if(Auth::user()->role->name === 'Registrar' && $student->enrollment->status === 'Pending Review')
-                    <form method="POST" action="" class="flex flex-col items-end gap-4 mb-0">
-                        @csrf
-                        <div class="w-full">
-                            <label for="remarks" class="block text-sm font-medium text-gray-700 mb-2">Remarks</label>
-                            <textarea name="remarks" id="remarks" rows="3" class="w-full border-gray-300 rounded px-3 py-2 mb-4 focus:ring-indigo-500 focus:border-indigo-500" placeholder="Enter remarks (optional)"></textarea>
+            <!-- Uploaded Documents -->
+            <div class="bg-white border border-gray-200 rounded-2xl shadow-xl p-8 animate-slideUp delay-150">
+                <h3 class="text-xl font-bold text-blue-900 mb-4 flex items-center">
+                    📁 Student Documents
+                </h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm text-gray-700">
+                    @php
+                        $docs = [
+                            'Birth Certificate' => $student->birthCertificate,
+                            'Form 137' => $student->form137,
+                            'Good Moral' => $student->goodMoral,
+                            'Report Card' => $student->reportCard,
+                        ];
+                    @endphp
+                    @foreach($docs as $label => $file)
+                        <div>
+                            <span class="font-bold">{{ $label }}:</span>
+                            @if(!empty($file))
+                                <a href="{{ asset('storage/' . $file) }}" target="_blank" 
+                                   class="ml-2 inline-block px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 transition text-xs">View</a>
+                            @else
+                                <span class="text-gray-500 ml-2">Not uploaded</span>
+                            @endif
                         </div>
-                        <div class="flex gap-2 mb-4">
+                    @endforeach
+                </div>
+            </div>
+
+            <!-- Parent / Guardian Details -->
+            <div class="bg-white border border-gray-200 rounded-2xl shadow-xl p-8 animate-slideUp delay-300">
+                <h3 class="text-xl font-bold text-blue-900 mb-4 flex items-center">
+                    👨‍👩‍👧 Parent / Guardian Information
+                </h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm text-gray-700">
+                    <p><span class="font-bold">Name:</span> {{ $student->guardianFName ?? '-' }} {{ $student->guardianMName ?? '' }} {{ $student->guardianLName ?? '' }}</p>
+                    <p><span class="font-bold">Email:</span> {{ $student->guardianEmail ?? '-' }}</p>
+                    <p><span class="font-bold">Contact Number:</span> {{ $student->guardianContact ?? '-' }}</p>
+                    <p><span class="font-bold">Relationship:</span> {{ $student->guardianRelationship ?? '-' }}</p>
+                    <p class="sm:col-span-2"><span class="font-bold">Address:</span> {{ $student->guardianAddress ?? '-' }}</p>
+                </div>
+            </div>
+
+            <!-- Registrar / Student Buttons -->
+            <div class="bg-white border border-gray-200 rounded-2xl shadow-xl p-8 text-center animate-fadeIn delay-500">
+                @if(Auth::user()->role->name === 'Registrar' && $student->enrollment->status === 'Pending Review')
+                    <form method="POST" action="" class="flex flex-col items-center gap-4">
+                        @csrf
+                        <textarea name="remarks" id="remarks" rows="3" 
+                                  class="w-full max-w-xl border-gray-300 rounded px-3 py-2 focus:ring-blue-500 focus:border-blue-500" 
+                                  placeholder="Enter remarks (optional)"></textarea>
+                        <div class="flex flex-wrap justify-center gap-3">
                             <button type="submit" formaction="{{ route('students.approve', $student->id) }}" class="px-6 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition">Approve</button>
                             <button type="submit" formaction="{{ route('students.reject', $student->id) }}" class="px-6 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition">Reject</button>
                             <a href="{{ route('students.edit', $student->id) }}" class="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">Edit</a>
@@ -126,15 +131,29 @@
                         </div>
                     </form>
                 @elseif(Auth::user()->role->name === 'Student' && $student->id === Auth::user()->student->id)
-                    @if($student->enrollment->status === 'Rejected' || $student->enrollment->status === 'Pending Review')
-                        <a href="{{ route('students.edit', $student->id) }}" class="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">Edit</a>
-                    @endif
-                    <a href="{{ route('dashboard') }}" class="px-6 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-700 hover:text-white transition">Back</a>
+                    <div class="flex flex-wrap justify-center gap-3">
+                        @if(in_array($student->enrollment->status, ['Rejected', 'Pending Review']))
+                            <a href="{{ route('students.edit', $student->id) }}" class="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">Edit</a>
+                        @endif
+                        <a href="{{ route('dashboard') }}" class="px-6 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-700 hover:text-white transition">Back</a>
+                    </div>
                 @else
                     <a href="{{ route('enrollment.index') }}" class="px-6 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-700 hover:text-white transition">Back to List</a>
                 @endif
             </div>
         </div>
     </div>
-    
+
+    <!-- Animations -->
+    <style>
+        @keyframes fadeIn { from {opacity:0; transform:translateY(10px);} to {opacity:1; transform:translateY(0);} }
+        @keyframes slideUp { from {opacity:0; transform:translateY(40px);} to {opacity:1; transform:translateY(0);} }
+        @keyframes slideDown { from {opacity:0; transform:translateY(-40px);} to {opacity:1; transform:translateY(0);} }
+        .animate-fadeIn { animation: fadeIn 0.8s ease-out; }
+        .animate-slideUp { animation: slideUp 0.9s ease-out; }
+        .animate-slideDown { animation: slideDown 0.9s ease-out; }
+        .delay-150 { animation-delay: 0.15s; }
+        .delay-300 { animation-delay: 0.3s; }
+        .delay-500 { animation-delay: 0.5s; }
+    </style>
 </x-sidebar>
