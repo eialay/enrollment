@@ -3,6 +3,7 @@
     'label' => '',
     'options' => [],
     'required' => false,
+    'nodefault' => false,
     'helpText' => '',
     'value' => old($name),
 ])
@@ -14,7 +15,9 @@
         @endif
     </label>
     <select name="{{ $name }}" id="{{ $name }}" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" @if($required) required @endif>
-        <option value="">Select...</option>
+        @if(!$nodefault)
+            <option value="">Select...</option>
+        @endif
         @foreach($options as $key => $option)
             <option value="{{ $key }}" {{ $value == $key ? 'selected' : '' }}>{{ $option }}</option>
         @endforeach

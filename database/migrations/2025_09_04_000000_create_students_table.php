@@ -32,6 +32,7 @@ return new class extends Migration {
             $table->string('brgyClearance')->nullable();
             $table->string('tor')->nullable();
             $table->string('honDismissal')->nullable();
+            $table->string('oldStudentID')->nullable();
             $table->string('fatherFName');
             $table->string('fatherMName');
             $table->string('fatherLName');

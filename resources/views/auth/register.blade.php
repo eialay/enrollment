@@ -8,7 +8,7 @@
         style="background-image: linear-gradient(rgba(250, 250, 250, 0.937), rgba(8, 52, 117, 0.942)), url('../assets/img/img.jpg');"
     >
 
-        <div class="md:w-3/4 my-8 bg-white p-10 flex flex-col justify-center">
+        <div class="md:w-3/4 my-8 bg-white p-10 flex flex-col justify-center shadow-[0px_0px_8px_0px_rgba(0,_0,_0,_0.4)]">
             <h1 class="text-2xl font-bold text-blue-900 mb-6 text-center">
                 Student Registration
             </h1>
@@ -28,9 +28,9 @@
 
                 <h3 class="font-bold text-blue-900 mt-12 uppercase">Enrollment Information</h3>
                 <div class="md:flex gap-2">
-                    <x-form.select name="admissionType" label="Admission Type" required :options="['Freshmen' => 'Freshmen', 'Transferee' => 'Transferee', 'Returnee' => 'Returnee']" />
+                    <x-form.select name="admissionType" label="Admission Type" required nodefault :options="['Freshmen' => 'Freshmen', 'Transferee' => 'Transferee', 'Returnee' => 'Returnee']" />
                     <x-form.select name="course" label="Course" required :options="['BSIT' => 'BS Information Technology', 'BSED' => 'BS Education', 'BSBA' => 'BS Business Administration']" />
-                    <x-form.select name="yearLevel" label="Year Level" required :options="['firstYear' => 'First Year', 'secondYear' => 'Second Year', 'thirdYear' => 'Third Year', 'fourthYear' => 'Fourth Year']" />
+                    <x-form.select name="yearLevel" label="Year Level" required nodefault :options="['firstYear' => 'First Year', 'secondYear' => 'Second Year', 'thirdYear' => 'Third Year', 'fourthYear' => 'Fourth Year']" />
                 </div>
 
                 <h3 class="font-bold text-blue-900 mt-12 uppercase">Primary Documents</h3>
@@ -82,7 +82,6 @@
                     <x-form.text name="fatherFName" label="Father's First Name" required />
                     <x-form.text name="fatherMName" label="Father's Middle Name" required />
                     <x-form.text name="fatherLName" label="Father's Last Name" required /> 
-                    <x-form.text name="fatherSuffix" label="Father's Suffix" />
                 </div>
                 <div class="md:flex gap-2">
                     <x-form.text name="motherFName" label="Mother's First Name" required />
@@ -90,14 +89,14 @@
                     <x-form.text name="motherLName" label="Mother's Last Name" required /> 
                 </div>
                 <div class="md:flex gap-2">
-                    <x-form.text name="guardianFName" label="First Name" required />
-                    <x-form.text name="guardianMName" label="Middle Name" required />
-                    <x-form.text name="guardianLName" label="Last Name" required /> 
+                    <x-form.text name="guardianFName" label="Guardian First Name" required />
+                    <x-form.text name="guardianMName" label="Guardian Middle Name" required />
+                    <x-form.text name="guardianLName" label="Guardian Last Name" required /> 
                 </div>
                 <div class="md:flex gap-2">
-                    <x-form.text name="guardianEmail" label="Email" required />
-                    <x-form.text name="guardianContact" label="Contact Number" required maxLength="11"/>
-                    <x-form.text name="guardianRelationship" label="Relationship" required />
+                    <x-form.text name="guardianEmail" label="Guardian Email" required />
+                    <x-form.text name="guardianContact" label="Guardian Contact Number" required maxLength="11"/>
+                    <x-form.text name="guardianRelationship" label="Relationship to Student" required />
                 </div>
                 <x-form.text name="guardianAddress" label="Address" required />
 
@@ -126,6 +125,23 @@
                 </div>
             </form>
             <script>
+                document.getElementById('tor').parentElement.style.display = 'none';
+                document.getElementById('honDismissal').parentElement.style.display = 'none';
+                var yearLevelSelect = document.getElementById('yearLevel');
+                    
+                // save original options once
+                if (!yearLevelSelect.dataset.originalOptions) {
+                    yearLevelSelect.dataset.originalOptions = yearLevelSelect.innerHTML;
+                }
+                var opt = document.createElement('option');
+                opt.value = 'firstYear';
+                opt.textContent = 'First Year';
+                opt.selected = true;
+
+                yearLevelSelect.value = 'firstYear';
+                yearLevelSelect.innerHTML = '';
+                yearLevelSelect.appendChild(opt);
+
                 function fillFieldsFromOcr(fields) {
                     if(fields.firstname) document.querySelector('[name="firstname"]').value = fields.firstname;
                     if(fields.middlename) document.querySelector('[name="middlename"]').value = fields.middlename;
@@ -133,9 +149,9 @@
                     if(fields.birthdate) document.querySelector('[name="birthdate"]').value = fields.birthdate;
                 }
 
-                document.getElementById('birthCertificate').addEventListener('change', function() {
-                    var fileInput = document.getElementById('birthCertificate');
-                    var statusDiv = document.getElementById('birthCertificate_help');
+                document.getElementById('reportCard').addEventListener('change', function() {
+                    var fileInput = document.getElementById('reportCard');
+                    var statusDiv = document.getElementById('reportCard_help');
                     if (!fileInput.files.length) {
                         statusDiv.textContent = 'Please select an image or PDF file.';
                         return;
@@ -156,12 +172,41 @@
                             fillFieldsFromOcr(data.fields);
                             statusDiv.textContent = 'Fields auto-filled. Please review and complete the form.';
                         } else {
-                            statusDiv.textContent = 'Could not extract fields. Raw text: ' + (data.raw_text || '');
+                            statusDiv.textContent = '';
                         }
                     })
                     .catch(err => {
-                        statusDiv.textContent = 'OCR failed: ' + err;
+                        statusDiv.textContent = '';
                     });
+                });
+
+                document.getElementById('admissionType').addEventListener('change', function() {
+                    var admissionType = document.getElementById('admissionType').value;
+                    var torInput = document.getElementById('tor');
+                    var honDismissalInput = document.getElementById('honDismissal');
+                    var form137Input = document.getElementById('form137');
+                    var reportCardInput = document.getElementById('reportCard');                
+
+                    if (admissionType === 'Freshmen') {
+                        form137Input.parentElement.style.display = 'block';
+                        reportCardInput.parentElement.style.display = 'block';
+                        torInput.parentElement.style.display = 'none';
+                        torInput.value = '';
+                        honDismissalInput.parentElement.style.display = 'none';
+                        honDismissalInput.value = '';                        
+                        
+                        yearLevelSelect.innerHTML = '';
+                        yearLevelSelect.appendChild(opt);
+                    } else if (admissionType === 'Transferee') {
+                        torInput.parentElement.style.display = 'block';
+                        honDismissalInput.parentElement.style.display = 'block';
+                        form137Input.parentElement.style.display = 'none';
+                        form137Input.value = '';
+                        reportCardInput.parentElement.style.display = 'none';
+                        reportCardInput.value = '';
+
+                        yearLevelSelect.innerHTML = yearLevelSelect.dataset.originalOptions;
+                    }
                 });
             </script>
             <script>
