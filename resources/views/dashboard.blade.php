@@ -87,20 +87,22 @@
                     </div>
                 </div>
             @endif
+
+            @if($hasPendingDocuments)
+            <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-6 rounded-lg shadow-sm animate-fadeInUp">
+                <div class="font-bold mb-2">Documents Tracker</div>
+                
+                <p class="mb-4">You have pending documents to submit. Please upload the following documents to complete your enrollment:</p>
+                <ul class="mb-4 list-disc pl-5 space-y-1">
+                    @foreach($documents as $key => $status)
+                        <li><b>{{ $key }}</b> : {{ $status == 'Submitted' ? '✔' : $status }}</li>
+                    @endforeach
+                </ul>
+            </div>
+            @endif
         @endif
 
-        @if($hasPendingDocuments)
-        <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-6 rounded-lg shadow-sm animate-fadeInUp">
-            <div class="font-bold mb-2">Documents Tracker</div>
-            
-            <p class="mb-4">You have pending documents to submit. Please upload the following documents to complete your enrollment:</p>
-            <ul class="mb-4 list-disc pl-5 space-y-1">
-                @foreach($documents as $key => $status)
-                    <li><b>{{ $key }}</b> : {{ $status == 'Submitted' ? '✔' : $status }}</li>
-                @endforeach
-            </ul>
-        </div>
-        @endif
+        
     </div>
 
     <!-- Tailwind Animations -->
