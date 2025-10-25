@@ -2,8 +2,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Models\Student;
 use App\Models\Enrollment;
+use App\Models\EnrollmentQueue;
 use App\Models\Payment;
 use Illuminate\Support\Str;
 
@@ -82,5 +84,45 @@ class EnrollmentController extends Controller
             return redirect()->back()->with('success', 'Student has been rejected.');
         }
         return redirect()->back()->with('error', 'Unable to reject student.');
+    }
+
+
+    public function queueList()
+    {
+        $queueList = EnrollmentQueue::orderBy('created_at', 'asc')
+            ->get();
+        return view('enrollment_queue_list', compact('queueList'));
+    }
+    public function getQueueNumber(Request $request)
+    {
+        $student = Student::where('user_id', Auth::id())->first();
+        if (!$student) {
+            return redirect()->route('dashboard')->with('error', 'Student record not found.');
+        }
+        
+        // Generate a unique queue number
+        $queueNumber = 'Q' . rand(1000, 9999);
+        // Store in DB
+        $queue = EnrollmentQueue::create([
+            'enrollment_code' => $student->enrollment->reference_code,
+            'queue_number' => $queueNumber,
+            'status' => 'Waiting',
+        ]);
+        
+        EmailController::sendEmail(
+            ['student' => $student->user->email ?? null],
+            'Enrollment Queue Number',
+            "Hello,\n\nYour enrollment queue number is: $queueNumber\n\nPlease wait for your number to be called for enrollment processing.\n\nThank you."
+        );
+
+        //test
+        
+        return redirect()->route('dashboard');
+    }
+    public function deleteQueue($id)
+    {
+        $queue = EnrollmentQueue::findOrFail($id);
+        $queue->delete();
+        return redirect()->route('enrollment.index')->with('success', 'Queue record deleted successfully.');
     }
 }

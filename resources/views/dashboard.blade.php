@@ -46,11 +46,24 @@
                     <div class="font-bold mb-2">Next Steps</div>
                     <ul class="list-disc pl-5 space-y-1">
                         <li>Your enrollment is currently <strong>Pending Review</strong>.</li>
-                        <li>Head over to the Admission's office, show your reference code, and bring your physical documents for review.</li>
-                        <li>You will be notified once your status changes.</li>
+                        <li>Head over to the Admission's office, show your Enrollment reference code, and bring your physical documents for review.</li>
                         <li>If you need to update your information, visit your profile page.</li>
+                        @if(isset($queueNumber))
+                            <li>Your Queue Number is <strong>{{ $queueNumber }}</strong>.</li>
+                            <li>Please wait for your number to be called for enrollment processing.</li>
+                        @else
+                            <li>Once in the Admission's office you may get a queue number below.</li>
+                        @endif
                     </ul>
-                </div>                
+
+                    @if(!isset($queueNumber))
+                    <form method="POST" action="{{ route('enrollment.queue') }}">
+                        @csrf
+                        <button type="submit" class="mt-6 px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">Get a Queue Number</button>
+                    </form> 
+                    @endif
+                </div>
+
             @elseif($student->enrollment->status === 'Pending Payment')
                 @if($student->payment && $student->payment->status === 'Unpaid')
                     <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-6 rounded-lg shadow-sm animate-fadeInUp">
@@ -77,6 +90,15 @@
                         </ul>
                     </div>
                 @endif
+            @elseif($student->enrollment->status === 'Rejected')
+                <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6 rounded-lg shadow-sm animate-fadeInUp">
+                    <div class="font-bold mb-2">Enrollment Rejected</div>
+                    <p>Your enrollment has been <strong>Rejected</strong>. Please review the reasons below and take necessary actions:</p>
+                    <p class="mt-4 mb-6 italic">{{ $student->enrollment->remarks }}</p>
+                    <div class="mt-4">
+                        <a href="{{ route('students.edit', $student->id) }}" class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all duration-300 transform hover:scale-105 shadow-md">Update Student Details</a>
+                    </div>
+                </div>
 
             @elseif($student->enrollment->status === 'Enrolled')
                 <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-6 rounded-lg shadow-sm animate-fadeInUp">
@@ -89,7 +111,7 @@
             @endif
 
             @if($hasPendingDocuments)
-            <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-6 rounded-lg shadow-sm animate-fadeInUp">
+            <div class="bg-orange-100 border-l-4 border-orange-500 text-orange-700 p-4 mb-6 rounded-lg shadow-sm animate-fadeInUp">
                 <div class="font-bold mb-2">Documents Tracker</div>
                 
                 <p class="mb-4">You have pending documents to submit. Please upload the following documents to complete your enrollment:</p>

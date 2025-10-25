@@ -70,4 +70,8 @@ class Student extends Model
         $year = $this->created_at ? $this->created_at->format('y') : now()->format('y');
         return $year . '-' . str_pad($this->id, 4, '0', STR_PAD_LEFT);
     }
+    public function getFullNameAttribute()
+    {
+        return "{$this->firstname} {$this->middlename} {$this->lastname}";
+    }
 }

@@ -28,9 +28,9 @@
 
                 <h3 class="font-bold text-blue-900 mt-12 uppercase">Enrollment Information</h3>
                 <div class="md:flex gap-2">
-                    <x-form.select name="admissionType" label="Admission Type" required nodefault :options="['Freshman' => 'Freshman', 'Transferee' => 'Transferee', 'Returnee' => 'Returnee']" />
+                    <x-form.select name="admissionType" label="Admission Type" required nodefault :options="['Freshman' => 'Freshman', 'Transferee' => 'Transferee']" />
                     <x-form.select name="course" label="Course" required :options="['BSIT' => 'BS Information Technology', 'BSED' => 'BS Education', 'BSBA' => 'BS Business Administration']" />
-                    <x-form.select name="yearLevel" label="Year Level" required nodefault :options="['firstYear' => 'First Year', 'secondYear' => 'Second Year', 'thirdYear' => 'Third Year', 'fourthYear' => 'Fourth Year']" />
+                    <x-form.select name="yearLevel" label="Year Level" required nodefault :options="['First Year' => 'First Year', 'Second Year' => 'Second Year', 'Third Year' => 'Third Year', 'Fourth Year' => 'Fourth Year']" />
                 </div>
 
                 <h3 class="font-bold text-blue-900 mt-12 uppercase">Primary Documents</h3>
@@ -136,11 +136,11 @@
                     yearLevelSelect.dataset.originalOptions = yearLevelSelect.innerHTML;
                 }
                 var opt = document.createElement('option');
-                opt.value = 'firstYear';
+                opt.value = 'First Year';
                 opt.textContent = 'First Year';
                 opt.selected = true;
 
-                yearLevelSelect.value = 'firstYear';
+                yearLevelSelect.value = 'First Year';
                 yearLevelSelect.innerHTML = '';
                 yearLevelSelect.appendChild(opt);
 

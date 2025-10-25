@@ -13,11 +13,11 @@ return new class extends Migration
     {
         Schema::create('enrollment_queue', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('enrollment_id');
+            $table->string('enrollment_code');
             $table->string('queue_number')->unique();
             $table->string('status')->default('Waiting');
             $table->timestamps();
-            $table->foreign('enrollment_id')->references('id')->on('enrollments')->onDelete('cascade');
+            $table->foreign('enrollment_code')->references('reference_code')->on('enrollments')->onDelete('cascade');
         });
         
     }

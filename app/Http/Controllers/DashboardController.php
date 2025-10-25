@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Student;
 use App\Models\Enrollment;
+use App\Models\EnrollmentQueue;
 use App\Models\Payment;
 
 class DashboardController extends Controller
@@ -36,6 +37,14 @@ class DashboardController extends Controller
 
                 break;
             case 'Admission':
+                $enrollmentQueueCount = EnrollmentQueue::count();
+                $data['cards'][] = [
+                    'title' => 'Enrollment Queue',
+                    'value' => $enrollmentQueueCount,
+                    'icon' => 'fa-list-ol',
+                    'color' => 'purple',
+                    'link' => route('enrollment.queueList'),
+                ];
 
                 break;
             case 'Cashier':
@@ -56,6 +65,10 @@ class DashboardController extends Controller
                     $data['student'] = $studentRecord;
                     $status = $studentRecord->enrollment->status;
                     $statusColors = config('enrollment.enrollment_status_colors');
+                    $queueNumber = EnrollmentQueue::where('enrollment_code', $studentRecord->enrollment->reference_code)
+                                    ->orderByDesc('created_at')
+                                    ->first()?->queue_number ?? null;
+                    $data['queueNumber'] = $queueNumber;
                     
                     $data['cards'] = [
                         [ 
@@ -86,6 +99,15 @@ class DashboardController extends Controller
                         'value' => $paymentStatus,
                         'icon' => 'fa-receipt',
                         'color' => $paymentStatusColors[$paymentStatus] ?? 'yellow',                        
+                    ];
+                }
+
+                if ($queueNumber) {
+                    $data['cards'][] = [
+                        'title' => 'Enrollment Queue Number',
+                        'value' => $queueNumber,
+                        'icon' => 'fa-list-ol',
+                        'color' => 'purple',
                     ];
                 }
 

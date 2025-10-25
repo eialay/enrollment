@@ -49,7 +49,7 @@ class RegisterController extends Controller
             'gender' => 'required|in:Male,Female',
             'course' => 'required|in:BSIT,BSED,BSBA',
             'admissionType' => 'required|in:Freshman,Transferee,Returnee',
-            'yearLevel' => 'required|in:firstYear,secondYear,thirdYear,fourthYear',
+            'yearLevel' => 'required|in:First Year,Second Year,Third Year,Fourth Year',
             'address' => 'required|string|max:255',
             'baranggay' => 'required|string|max:255',
             'city' => 'required|string|max:255',
@@ -144,8 +144,8 @@ class RegisterController extends Controller
             'student_id' => $student->id,
             'status' => 'Pending Review',
             'course' => $validated['course'],
-            'admissionType' => $validated['admissionType'],
-            'yearLevel' => $validated['yearLevel'],
+            'admission_type' => $validated['admissionType'],
+            'year_level' => $validated['yearLevel'],
             'school_year' => date('Y').'-'.(date('Y') + 1), // Current to next year
             'reference_code' => $enrollmentReference,
         ]);
