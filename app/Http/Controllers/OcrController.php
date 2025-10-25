@@ -96,6 +96,19 @@ class OcrController extends Controller
         if (preg_match('/\(Last\)\s*\n?([A-Z\- ]+)/i', $fullText, $matches)) {
             $fields['lastname'] = trim($matches[1]);
         }
+        // Try to match "LastName, FirstName MiddleName" (common printed format)
+        if (preg_match('/([A-Z][A-Z\'\-]+),\s*([A-Z][A-Z\'\-]+)(?:\s+([A-Z][A-Z\'\-]+))?/i', $fullText, $m)) {
+            // Only overwrite empty parts so earlier extraction rules remain if present
+            if (empty($fields['lastname'])) {
+                $fields['lastname'] = trim($m[1]);
+            }
+            if (empty($fields['firstname'])) {
+                $fields['firstname'] = trim($m[2]);
+            }
+            if (!empty($m[3]) && empty($fields['middlename'])) {
+                $fields['middlename'] = trim($m[3]);
+            }
+        }
 
         // Extract birthdate
         if (preg_match('/(\d{2} [A-Z]+ \d{4})/', $fullText, $matches)) {
@@ -103,6 +116,28 @@ class OcrController extends Controller
 
         }
 
+        
+
+        // // Build a single formatted name: "LastName, FirstName MiddleName"
+        // $last = trim($fields['lastname'] ?? '');
+        // $first = trim($fields['firstname'] ?? '');
+        // $middle = trim($fields['middlename'] ?? '');
+
+        // if ($last !== '') {
+        //     $nameFormatted = $last;
+        //     if ($first !== '') {
+        //         $nameFormatted .= ', ' . $first;
+        //         if ($middle !== '') {
+        //             $nameFormatted .= ' ' . $middle;
+        //         }
+        //     }
+        // } else {
+        //     // Fallback: join whatever parts we have
+        //     $parts = array_filter([$first, $middle, $last]);
+        //     $nameFormatted = implode(' ', $parts);
+        // }
+
+        // $fields['name_formatted'] = $nameFormatted;
 
         return response()->json([
             'raw_text' => $fullText,

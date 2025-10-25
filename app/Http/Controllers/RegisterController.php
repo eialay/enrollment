@@ -17,6 +17,25 @@ class RegisterController extends Controller
         return view('auth.register');
     }
 
+    /**
+     * Validate an email via query parameter and return JSON { exists: bool }
+     * GET /api/validate-email?email=...
+     */
+    public function validateEmail(Request $request)
+    {
+        $email = $request->query('email');
+        if (empty($email)) {
+            return response()->json(['error' => 'email parameter is required'], 400);
+        }
+
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            return response()->json(['error' => 'invalid email format'], 422);
+        }
+
+        $exists = User::where('email', $email)->exists();
+        return response()->json(['exists' => $exists]);
+    }
+
     public function register(Request $request)
     {
         $validated = $request->validate([
@@ -29,7 +48,7 @@ class RegisterController extends Controller
             'birthdate' => 'required|date',
             'gender' => 'required|in:Male,Female',
             'course' => 'required|in:BSIT,BSED,BSBA',
-            'admissionType' => 'required|in:Freshmen,Transferee,Returnee',
+            'admissionType' => 'required|in:Freshman,Transferee,Returnee',
             'yearLevel' => 'required|in:firstYear,secondYear,thirdYear,fourthYear',
             'address' => 'required|string|max:255',
             'baranggay' => 'required|string|max:255',
@@ -50,7 +69,6 @@ class RegisterController extends Controller
             'guardianContact' => 'required|string|max:255',
             'guardianRelationship' => 'required|string|max:255',
             'guardianAddress' => 'required|string|max:255',
-            // Parent/guardian and educational background additional fields
             'fatherFName' => 'required|string|max:255',
             'fatherMName' => 'required|string|max:255',
             'fatherLName' => 'required|string|max:255',
@@ -82,11 +100,9 @@ class RegisterController extends Controller
             'birthdate' => $validated['birthdate'],
             'gender' => $validated['gender'],
             'address' => $validated['address'],
-            'baranggay' => $validated['baranggay'] ?? null,
-            'city' => $validated['city'] ?? null,
-            'province' => $validated['province'] ?? null,
-            'admissionType' => $validated['admissionType'] ?? null,
-            'yearLevel' => $validated['yearLevel'] ?? null,
+            'baranggay' => $validated['baranggay'],
+            'city' => $validated['city'],
+            'province' => $validated['province'],        
             'guardianFName' => $validated['guardianFName'],
             'guardianMName' => $validated['guardianMName'],
             'guardianLName' => $validated['guardianLName'],
@@ -94,21 +110,18 @@ class RegisterController extends Controller
             'guardianContact' => $validated['guardianContact'],
             'guardianRelationship' => $validated['guardianRelationship'],
             'guardianAddress' => $validated['guardianAddress'],
-            // parents
-            'fatherFName' => $validated['fatherFName'] ?? null,
-            'fatherMName' => $validated['fatherMName'] ?? null,
-            'fatherLName' => $validated['fatherLName'] ?? null,
-            'fatherSuffix' => $validated['fatherSuffix'] ?? null,
-            'motherFName' => $validated['motherFName'] ?? null,
-            'motherMName' => $validated['motherMName'] ?? null,
-            'motherLName' => $validated['motherLName'] ?? null,
-            // educational background
-            'primarySchool' => $validated['primarySchool'] ?? null,
-            'primarySchoolYearGraduated' => $validated['primarySchoolYearGraduated'] ?? null,
-            'secondarySchool' => $validated['secondarySchool'] ?? null,
-            'secondarySchoolYearGraduated' => $validated['secondarySchoolYearGraduated'] ?? null,
-            'lastSchoolAttended' => $validated['lastSchoolAttended'] ?? null,
-            'lastSchoolAttendedYearGraduated' => $validated['lastSchoolAttendedYearGraduated'] ?? null,
+            'fatherFName' => $validated['fatherFName'],
+            'fatherMName' => $validated['fatherMName'],
+            'fatherLName' => $validated['fatherLName'],            
+            'motherFName' => $validated['motherFName'],
+            'motherMName' => $validated['motherMName'],
+            'motherLName' => $validated['motherLName'],
+            'primarySchool' => $validated['primarySchool'],
+            'primarySchoolYearGraduated' => $validated['primarySchoolYearGraduated'],
+            'secondarySchool' => $validated['secondarySchool'],
+            'secondarySchoolYearGraduated' => $validated['secondarySchoolYearGraduated'],
+            'lastSchoolAttended' => $validated['lastSchoolAttended'],
+            'lastSchoolAttendedYearGraduated' => $validated['lastSchoolAttendedYearGraduated'],
         ];
         // Handle student image upload
         if ($request->hasFile('studentImage')) {
@@ -123,8 +136,6 @@ class RegisterController extends Controller
 
         $student = Student::create($studentData);
 
-        
-
         // Generate enrollment reference code (e.g., ENR-<year><student_id>)
         $enrollmentReference = 'ENR-'.date('y').str_pad($student->id, 6, '0', STR_PAD_LEFT);
 
@@ -133,9 +144,17 @@ class RegisterController extends Controller
             'student_id' => $student->id,
             'status' => 'Pending Review',
             'course' => $validated['course'],
+            'admissionType' => $validated['admissionType'],
+            'yearLevel' => $validated['yearLevel'],
             'school_year' => date('Y').'-'.(date('Y') + 1), // Current to next year
             'reference_code' => $enrollmentReference,
         ]);
+
+        EmailController::sendEmail(
+            ['student' => optional($student->user)->email, 'parent' => $student->guardianEmail ?? null],
+            'Registration Successful - ' . ($student->enrollment->reference_code ?? 'No Ref'),
+            "Hello,\n\nYour registration has been successful and is now pending review.\n\nDetails:\n- Enrollment Reference: " . ($student->enrollment->reference_code ?? 'N/A') . "\n- Status: Pending Review\n\nLog into your account for the next steps.\n\nThank you."
+        );
 
         Auth::login($user);
 

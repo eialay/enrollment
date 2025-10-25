@@ -2,6 +2,7 @@
     'name',
     'label' => '',
     'required' => false,
+    'helpText' => '',
 ])
 <div class="w-full mb-4">
     <label for="{{$name}}" class="block text-blue-900 font-semibold mb-1">
@@ -18,4 +19,5 @@
         {{ $required ? 'required' : '' }}
         {{ $attributes }}
     />
+    <p class="mt-1 text-sm text-gray-500" id="{{$name}}_help">{{ $helpText ?? '' }}</p>
 </div>

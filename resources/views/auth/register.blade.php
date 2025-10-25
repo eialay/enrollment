@@ -5,7 +5,7 @@
 
     <div 
         class="bg-cover bg-center bg-no-repeat min-h-screen flex items-center justify-center font-sans" 
-        style="background-image: linear-gradient(rgba(250, 250, 250, 0.937), rgba(8, 52, 117, 0.942)), url('../assets/img/img.jpg');"
+        style="background-image: linear-gradient(rgba(250, 250, 250, 0.937), rgba(8, 52, 117, 0.942)), url('/img/img.jpg');"
     >
 
         <div class="md:w-3/4 my-8 bg-white p-10 flex flex-col justify-center shadow-[0px_0px_8px_0px_rgba(0,_0,_0,_0.4)]">
@@ -23,19 +23,20 @@
                 </div>
             @endif
             
-            <form id="registrationForm" action="{{ route('register.submit') }}" method="POST" class="space-y-6" enctype="multipart/form-data" onsubmit="return validatePasswordConfirmation();">
+            <form id="registrationForm" action="{{ route('register.submit') }}" method="POST" class="space-y-6" enctype="multipart/form-data" onsubmit="return validateLoginFields();">
                 @csrf
 
                 <h3 class="font-bold text-blue-900 mt-12 uppercase">Enrollment Information</h3>
                 <div class="md:flex gap-2">
-                    <x-form.select name="admissionType" label="Admission Type" required nodefault :options="['Freshmen' => 'Freshmen', 'Transferee' => 'Transferee', 'Returnee' => 'Returnee']" />
+                    <x-form.select name="admissionType" label="Admission Type" required nodefault :options="['Freshman' => 'Freshman', 'Transferee' => 'Transferee', 'Returnee' => 'Returnee']" />
                     <x-form.select name="course" label="Course" required :options="['BSIT' => 'BS Information Technology', 'BSED' => 'BS Education', 'BSBA' => 'BS Business Administration']" />
                     <x-form.select name="yearLevel" label="Year Level" required nodefault :options="['firstYear' => 'First Year', 'secondYear' => 'Second Year', 'thirdYear' => 'Third Year', 'fourthYear' => 'Fourth Year']" />
                 </div>
 
                 <h3 class="font-bold text-blue-900 mt-12 uppercase">Primary Documents</h3>
                 <div class="md:flex gap-2">
-                    <x-form.file name="reportCard" label="Report Card" />
+                    <x-form.file name="birthCertificate" label="Birth Certificate (PSA)" />
+                    <x-form.file name="reportCard" label="Form 138 (Report Card)" />
                     <x-form.file name="tor" label="Transcript of Records" />
                     <x-form.file name="studentImage" label="Passport Size ID Picture" helpText="(White Background, Formal Attire)" required />
                 </div>
@@ -72,8 +73,7 @@
                 <div class="md:flex gap-2">
                     <x-form.file name="form137" label="Form 137" />
                     <x-form.file name="honDismissal" label="Honorable Dismissal" />
-                    <x-form.file name="goodMoral" label="Good Moral" />
-                    <x-form.file name="birthCertificate" label="Birth Certificate (PSA)" />
+                    <x-form.file name="goodMoral" label="Certificate of Good Moral" />                    
                     <x-form.file name="brgyClearance" label="Baranggay Clearance" />
                 </div>
 
@@ -124,6 +124,8 @@
                 </button>
                 </div>
             </form>
+            <a href="/" class="text-blue-700 p-5 text-center hover:underline">Back to Login</a>
+            
             <script>
                 document.getElementById('tor').parentElement.style.display = 'none';
                 document.getElementById('honDismissal').parentElement.style.display = 'none';
@@ -142,16 +144,15 @@
                 yearLevelSelect.innerHTML = '';
                 yearLevelSelect.appendChild(opt);
 
-                function fillFieldsFromOcr(fields) {
-                    if(fields.firstname) document.querySelector('[name="firstname"]').value = fields.firstname;
-                    if(fields.middlename) document.querySelector('[name="middlename"]').value = fields.middlename;
-                    if(fields.lastname) document.querySelector('[name="lastname"]').value = fields.lastname;
-                    if(fields.birthdate) document.querySelector('[name="birthdate"]').value = fields.birthdate;
-                }
+                function fillFieldsFromOcr(elementID) {
+                    var fileInput = document.getElementById(elementID);
+                    var statusDiv = document.getElementById(elementID+'_help');
+                    var firstNameInput = document.querySelector('[name="firstname"]');
+                    var middleNameInput = document.querySelector('[name="middlename"]');
+                    var lastNameInput = document.querySelector('[name="lastname"]');
+                    var birthdateInput = document.querySelector('[name="birthdate"]');
+                    var fields = {};
 
-                document.getElementById('reportCard').addEventListener('change', function() {
-                    var fileInput = document.getElementById('reportCard');
-                    var statusDiv = document.getElementById('reportCard_help');
                     if (!fileInput.files.length) {
                         statusDiv.textContent = 'Please select an image or PDF file.';
                         return;
@@ -169,7 +170,13 @@
                     .then(res => res.json())
                     .then(data => {
                         if (data.fields) {
-                            fillFieldsFromOcr(data.fields);
+                            fields = data.fields;
+
+                            if(fields.firstname && firstNameInput.value == "" ) firstNameInput.value = fields.firstname;
+                            if(fields.middlename && middleNameInput.value == "") middleNameInput.value = fields.middlename;
+                            if(fields.lastname && lastNameInput.value == "") lastNameInput.value = fields.lastname;
+                            if(fields.birthdate) birthdateInput.value = fields.birthdate;
+
                             statusDiv.textContent = 'Fields auto-filled. Please review and complete the form.';
                         } else {
                             statusDiv.textContent = '';
@@ -178,6 +185,14 @@
                     .catch(err => {
                         statusDiv.textContent = '';
                     });
+                }
+
+                document.getElementById('birthCertificate').addEventListener('change', function() {
+                    fillFieldsFromOcr('birthCertificate');
+                });
+
+                document.getElementById('reportCard').addEventListener('change', function() {
+                    fillFieldsFromOcr('reportCard');
                 });
 
                 document.getElementById('admissionType').addEventListener('change', function() {
@@ -187,7 +202,7 @@
                     var form137Input = document.getElementById('form137');
                     var reportCardInput = document.getElementById('reportCard');                
 
-                    if (admissionType === 'Freshmen') {
+                    if (admissionType === 'Freshman') {
                         form137Input.parentElement.style.display = 'block';
                         reportCardInput.parentElement.style.display = 'block';
                         torInput.parentElement.style.display = 'none';
@@ -208,16 +223,70 @@
                         yearLevelSelect.innerHTML = yearLevelSelect.dataset.originalOptions;
                     }
                 });
+
+                document.querySelector('[name="email"]').addEventListener('blur', function() {
+                    var emailInput = document.querySelector('[name="email"]');
+                    var emailHelptext = document.getElementById('email_help');
+
+                    // Clear previous messages
+                    emailHelptext.textContent = '';
+                    emailHelptext.style.color = '';
+
+                    fetch(`{{ route('email.check') }}?email=${emailInput.value}`)
+                    .then(response => response.json())
+                    .then(response => {
+                        if (response.exists) {
+                            emailHelptext.textContent = 'This email is already in use.';
+                            emailHelptext.style.color = 'crimson';
+                        } else {
+                            emailHelptext.textContent = '';
+                            emailHelptext.style.color = '';
+                        }
+                    });
+                });
             </script>
             <script>
-                function validatePasswordConfirmation() {
+                function validateLoginFields() {
+                    var emailInput = document.querySelector('[name="email"]');
+                    var emailHelptext = document.getElementById('email_help');
+
                     var password = document.querySelector('[name="password"]');
                     var confirm = document.querySelector('[name="password_confirmation"]');
                     var errorDiv = document.getElementById('passwordError');
+
+                    if(emailInput.value == "") {
+                        emailHelptext.textContent = 'Email is required.';
+                        emailHelptext.style.color = 'crimson';
+                        emailInput.focus();
+                        return false;
+                    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailInput.value)) {
+                        emailHelptext.textContent = 'Invalid email format.';
+                        emailHelptext.style.color = 'crimson';
+                        emailInput.focus();
+                        return false;
+                    } else if (emailHelptext.style.color === 'crimson') {
+                        emailInput.focus();
+                        return false;
+                    } else {
+                        emailHelptext.textContent = '';
+                        emailHelptext.style.color = '';
+                    }
+                    
                     if (password && confirm && password.value !== confirm.value) {
                         errorDiv.textContent = 'Passwords do not match.';
                         errorDiv.style.display = 'block';
                         confirm.focus();
+                        return false;
+                    } else if (password.value.length < 8) {
+                        errorDiv.textContent = 'Password must be at least 8 characters long.';
+                        errorDiv.style.display = 'block';
+                        password.focus();
+                        return false;
+
+                    } else if (password.value === "" || confirm.value === "") {
+                        errorDiv.textContent = 'Password fields cannot be empty.';
+                        errorDiv.style.display = 'block';
+                        password.focus();
                         return false;
                     } else {
                         errorDiv.textContent = '';
@@ -226,8 +295,6 @@
                     }
                 }
             </script>
-
-            <a href="/" class="text-blue-700 p-5 text-center hover:underline">Back to Login</a>
         </div>
     </div>
 

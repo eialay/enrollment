@@ -115,9 +115,9 @@
                 </div>
             </div>
 
-            <!-- Registrar / Student Buttons -->
+            <!-- Admission / Student Buttons -->
             <div class="bg-white border border-gray-200 rounded-2xl shadow-xl p-8 text-center animate-fadeIn delay-500">
-                @if(Auth::user()->role->name === 'Registrar' && $student->enrollment->status === 'Pending Review')
+                @if(Auth::user()->role->name === 'Admission' && $student->enrollment->status === 'Pending Review')
                     <form method="POST" action="" class="flex flex-col items-center gap-4">
                         @csrf
                         <textarea name="remarks" id="remarks" rows="3" 
