@@ -4,35 +4,50 @@
     </x-slot>
 
     <div 
-        class="bg-cover bg-center bg-no-repeat min-h-screen flex items-center justify-center font-sans" 
-        style="background-image: linear-gradient(rgba(250, 250, 250, 0.937), rgba(8, 52, 117, 0.942)), url('../assets/img/img.jpg');"
+        class="bg-cover bg-center bg-no-repeat min-h-screen flex items-center justify-center font-sans animate-fadeIn"
+        style="background-image: linear-gradient(rgba(250, 250, 250, 0.94), rgba(8, 52, 117, 0.96)), url('../assets/img/img.jpg');"
     >
+        <!-- Card Container -->
+        <div class="md:w-3/4 lg:w-2/3 bg-white/95 backdrop-blur-md rounded-2xl shadow-2xl p-10 md:p-14 my-8 animate-slideUp border border-gray-200">
 
-        <div class="md:w-3/4 my-8 bg-white p-10 flex flex-col justify-center">
-            <h1 class="text-2xl font-bold text-blue-900 mb-6 text-center">
-                Student Registration
-            </h1>
+            <!-- Gradient Header -->
+            <div class="text-center mb-10">
+                <h1 class="text-4xl font-extrabold text-white bg-gradient-to-r from-blue-700 via-indigo-500 to-cyan-400 py-4 rounded-xl shadow-md animate-gradient">
+                    Student Registration
+                </h1>
+                <p class="text-gray-600 mt-2">Fill out all fields accurately to begin your enrollment process.</p>
+            </div>
 
+            <!-- Error Messages -->
             @if ($errors->any())
-                <div class="mb-4">
-                    <ul class="text-red-600 text-sm">
+                <div class="mb-6 animate-fadeInUp">
+                    <ul class="text-red-600 text-sm bg-red-50 border border-red-300 p-4 rounded-lg shadow-sm">
                         @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
+                            <li>⚠️ {{ $error }}</li>
                         @endforeach
                     </ul>
                 </div>
             @endif
-            
-            <form id="registrationForm" action="{{ route('register.submit') }}" method="POST" class="space-y-6" enctype="multipart/form-data" onsubmit="return validatePasswordConfirmation();">
+
+            <!-- Registration Form -->
+            <form id="registrationForm" 
+                action="{{ route('register.submit') }}" 
+                method="POST" 
+                class="space-y-6 animate-fadeInUp"
+                enctype="multipart/form-data"
+                onsubmit="return validatePasswordConfirmation();"
+            >
                 @csrf
 
-                <h3 class="font-bold text-blue-900 mt-12 uppercase">Primary Documents</h3>
+                <!-- Primary Documents -->
+                <h3 class="font-bold text-blue-900 mt-12 uppercase border-l-4 border-blue-700 pl-3">Primary Documents</h3>
                 <div class="md:flex gap-2">
-                    <x-form.file name="birthCertificate" label="Birth Certificate (PSA)" helpText="" required />
+                    <x-form.file name="birthCertificate" label="Birth Certificate (PSA)" required />
                     <x-form.file name="studentImage" label="ID Picture" helpText="Upload a recent photo" required />
                 </div>
 
-                <h3 class="font-bold text-blue-900 mt-12 uppercase">Student Information</h3>
+                <!-- Student Info -->
+                <h3 class="font-bold text-blue-900 mt-12 uppercase border-l-4 border-blue-700 pl-3">Student Information</h3>
                 <div class="md:flex gap-2">
                     <x-form.text name="firstname" label="First Name" required />
                     <x-form.text name="middlename" label="Middle Name" required />
@@ -41,7 +56,7 @@
 
                 <div class="md:flex gap-2">
                     <x-form.select name="gender" label="Gender" required :options="['Male' => 'Male', 'Female' => 'Female']" />
-                    <x-form.date name="birthdate" label="Birthdate" required pattern="\d{4}-\d{2}-\d{2}" placeholder="YYYY-MM-DD" :value="old('birthdate', \Carbon\Carbon::now()->subYears(16)->format('Y-m-d'))" />
+                    <x-form.date name="birthdate" label="Birthdate" required :value="old('birthdate', \Carbon\Carbon::now()->subYears(16)->format('Y-m-d'))" />
                 </div>
                 
                 <div class="md:flex gap-2">
@@ -61,14 +76,16 @@
 
                 <x-form.text name="address" label="Address" required />
 
-                <h3 class="font-bold text-blue-900 mt-12 uppercase">Secondary Documents</h3>
+                <!-- Secondary Documents -->
+                <h3 class="font-bold text-blue-900 mt-12 uppercase border-l-4 border-blue-700 pl-3">Secondary Documents</h3>
                 <div class="md:flex gap-2">
                     <x-form.file name="form137" label="Form 137" />
                     <x-form.file name="goodMoral" label="Good Moral" />
                     <x-form.file name="reportCard" label="Report Card" />
                 </div>
 
-                <h3 class="font-bold text-blue-900 mt-12 uppercase">Parent/Guardian Information</h3>
+                <!-- Guardian Info -->
+                <h3 class="font-bold text-blue-900 mt-12 uppercase border-l-4 border-blue-700 pl-3">Parent/Guardian Information</h3>
                 <div class="md:flex gap-2">
                     <x-form.text name="guardianFName" label="First Name" required />
                     <x-form.text name="guardianMName" label="Middle Name" required />
@@ -81,18 +98,18 @@
                 </div>
                 <x-form.text name="guardianAddress" label="Address" required />
 
-
-            
-                <!-- Submit -->
-                <div>
-                <button
-                    type="submit"
-                    class="w-full bg-blue-700 text-white font-semibold py-2 px-4 rounded-md hover:bg-blue-800 transition duration-300"
-                >
-                    Submit
-                </button>
+                <!-- Submit Button -->
+                <div class="pt-6">
+                    <button
+                        type="submit"
+                        class="w-full bg-gradient-to-r from-blue-700 via-indigo-500 to-cyan-400 text-white font-semibold py-3 px-6 rounded-lg shadow-md hover:opacity-90 hover:scale-105 transition-all duration-300"
+                    >
+                        Submit Registration
+                    </button>
                 </div>
             </form>
+
+            <!-- Scripts -->
             <script>
                 function fillFieldsFromOcr(fields) {
                     if(fields.firstname) document.querySelector('[name="firstname"]').value = fields.firstname;
@@ -110,7 +127,7 @@
                     }
                     var formData = new FormData();
                     formData.append('ocr_file', fileInput.files[0]);
-                    statusDiv.textContent = 'Scanning...';
+                    statusDiv.textContent = '🔍 Scanning...';
                     fetch("{{ route('ocr.scan') }}", {
                         method: 'POST',
                         headers: {
@@ -122,23 +139,22 @@
                     .then(data => {
                         if (data.fields) {
                             fillFieldsFromOcr(data.fields);
-                            statusDiv.textContent = 'Fields auto-filled. Please review and complete the form.';
+                            statusDiv.textContent = '✅ Fields auto-filled successfully.';
                         } else {
-                            statusDiv.textContent = 'Could not extract fields. Raw text: ' + (data.raw_text || '');
+                            statusDiv.textContent = '⚠️ Could not extract fields. Please check file.';
                         }
                     })
                     .catch(err => {
-                        statusDiv.textContent = 'OCR failed: ' + err;
+                        statusDiv.textContent = '❌ OCR failed: ' + err;
                     });
                 });
-            </script>
-            <script>
+
                 function validatePasswordConfirmation() {
                     var password = document.querySelector('[name="password"]');
                     var confirm = document.querySelector('[name="password_confirmation"]');
                     var errorDiv = document.getElementById('passwordError');
                     if (password && confirm && password.value !== confirm.value) {
-                        errorDiv.textContent = 'Passwords do not match.';
+                        errorDiv.textContent = '⚠️ Passwords do not match.';
                         errorDiv.style.display = 'block';
                         confirm.focus();
                         return false;
@@ -150,9 +166,33 @@
                 }
             </script>
 
-            <a href="/" class="text-blue-700 p-5 text-center hover:underline">Back to Login</a>
+            <!-- Back to Login -->
+            <div class="text-center mt-10">
+                <a href="/" class="text-blue-700 hover:text-blue-900 hover:underline transition">← Back to Login</a>
+            </div>
         </div>
     </div>
 
-  </div>
+    <!-- Tailwind Animations -->
+    <style>
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 100% 50%; }
+        }
+        .animate-fadeIn { animation: fadeIn 0.8s ease-out; }
+        .animate-fadeInUp { animation: slideUp 0.8s ease-out; }
+        .animate-slideUp { animation: slideUp 1s ease-in-out; }
+        .animate-gradient {
+            background-size: 200% 200%;
+            animation: gradientShift 3s linear infinite alternate;
+        }
+    </style>
 </x-app>
