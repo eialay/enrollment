@@ -35,7 +35,7 @@ class DashboardController extends Controller
             case 'Admin':
 
                 break;
-            case 'Registrar':
+            case 'Admission':
 
                 break;
             case 'Cashier':
@@ -88,6 +88,36 @@ class DashboardController extends Controller
                         'color' => $paymentStatusColors[$paymentStatus] ?? 'yellow',                        
                     ];
                 }
+
+
+                $data['hasPendingDocuments'] = $studentRecord->birthCertificate == null ||
+                                              $studentRecord->form137 == null ||
+                                              $studentRecord->goodMoral == null ||
+                                              $studentRecord->reportCard == null ||
+                                              $studentRecord->tor == null ||
+                                              $studentRecord->honDismissal == null ||
+                                              $studentRecord->brgyClearance == null;
+                
+                $data['documents'] = [                    
+                    'PSA Birth Certificate'     => $studentRecord->birthCertificate ? 'Submitted' : 'Not Submitted',
+                    'Certificate of Good Moral' => $studentRecord->goodMoral ? 'Submitted' : 'Not Submitted',                    
+                    'Barangay Clearance'        => $studentRecord->brgyClearance ? 'Submitted' : 'Not Submitted',
+                ];
+
+                $requiredDocuments = [];
+                if($studentRecord->enrollment->admissionType == 'Transferee') {
+                    $requiredDocuments = [
+                        'Transcript of Records'     => $studentRecord->tor ? 'Submitted' : 'Not Submitted',
+                        'Honorable Dismissal'       => $studentRecord->honDismissal ? 'Submitted' : 'Not Submitted',
+                    ];
+                } else {
+                    $requiredDocuments = [
+                        'Form 138 (Report Card)'    => $studentRecord->reportCard ? 'Submitted' : 'Not Submitted',
+                        'Form 137'                  => $studentRecord->form137 ? 'Submitted' : 'Not Submitted',
+                    ];
+                } 
+                $data['documents'] = array_merge($data['documents'], $requiredDocuments);
+
                 break;
             default:
                 return redirect()->route('login')->with('error', 'Unauthorized access.');

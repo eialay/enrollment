@@ -46,12 +46,11 @@
                     <div class="font-bold mb-2">Next Steps</div>
                     <ul class="list-disc pl-5 space-y-1">
                         <li>Your enrollment is currently <strong>Pending Review</strong>.</li>
-                        <li>Head over to the Registrar's office, show your reference code, and bring your physical documents for review.</li>
+                        <li>Head over to the Admission's office, show your reference code, and bring your physical documents for review.</li>
                         <li>You will be notified once your status changes.</li>
                         <li>If you need to update your information, visit your profile page.</li>
                     </ul>
-                </div>
-
+                </div>                
             @elseif($student->enrollment->status === 'Pending Payment')
                 @if($student->payment && $student->payment->status === 'Unpaid')
                     <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-6 rounded-lg shadow-sm animate-fadeInUp">
@@ -88,6 +87,19 @@
                     </div>
                 </div>
             @endif
+        @endif
+
+        @if($hasPendingDocuments)
+        <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-6 rounded-lg shadow-sm animate-fadeInUp">
+            <div class="font-bold mb-2">Documents Tracker</div>
+            
+            <p class="mb-4">You have pending documents to submit. Please upload the following documents to complete your enrollment:</p>
+            <ul class="mb-4 list-disc pl-5 space-y-1">
+                @foreach($documents as $key => $status)
+                    <li><b>{{ $key }}</b> : {{ $status == 'Submitted' ? '✔' : $status }}</li>
+                @endforeach
+            </ul>
+        </div>
         @endif
     </div>
 
