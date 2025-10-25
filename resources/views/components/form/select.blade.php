@@ -4,6 +4,7 @@
     'options' => [],
     'required' => false,
     'nodefault' => false,
+    'disabled' => false,
     'helpText' => '',
     'value' => old($name),
 ])
@@ -14,7 +15,7 @@
             <span class="text-red-600">*</span>
         @endif
     </label>
-    <select name="{{ $name }}" id="{{ $name }}" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" @if($required) required @endif>
+    <select name="{{ $name }}" id="{{ $name }}" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" @if($required) required @endif {{ $disabled ? 'disabled' : '' }}>
         @if(!$nodefault)
             <option value="">Select...</option>
         @endif

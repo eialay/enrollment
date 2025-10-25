@@ -61,6 +61,10 @@ class Student extends Model
     {
         return $this->belongsTo(User::class);
     }
+    public function studentID()
+    {
+        return $this->hasOne(StudentId::class);
+    }
     public function getFormattedIdAttribute()
     {
         $year = $this->created_at ? $this->created_at->format('y') : now()->format('y');

@@ -21,7 +21,8 @@ class Enrollment extends Model
         'payment_approved_at',
         'course',
         'school_year',
-        'grade_level',
+        'year_level',
+        'admission_type',
         'reference_code',
     ];
 

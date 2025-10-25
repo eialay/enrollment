@@ -39,9 +39,6 @@
                 <div class="flex flex-col sm:flex-row items-center gap-6">
                     <!-- Profile Image -->
                     <div class="flex flex-col items-center">
-                        @php
-                            $studentImageUrl = $student->studentImage ? asset('storage/' . $student->studentImage) : '/img/default-dp.jpg';
-                        @endphp
                         <a href="{{ $studentImageUrl }}" target="_blank">
                             <img src="{{ $studentImageUrl }}" alt="Student Image" 
                                  class="w-28 h-28 object-cover rounded-full border-4 border-blue-200 shadow-md hover:shadow-lg transition">
@@ -54,15 +51,19 @@
                     <!-- Info -->
                     <div class="flex-1 grid grid-cols-1 md:grid-cols-3 gap-3">
                         <h2 class="text-xl md:col-span-3 font-bold text-blue-900 mb-1">{{ $student->firstname }} {{ $student->middlename }} {{ $student->lastname }}</h2>
-                        <p class="text-sm text-gray-700 col-span-1">Student ID: <strong>{{ $student->formatted_id ?? 'N/A' }}</strong></p>
-                        <p class="text-sm text-gray-700 col-span-1">Course: <strong>{{ $student->enrollment->course ?? '-' }}</strong></p>
-                        <p class="text-sm text-gray-700 col-span-1">Grade Level: <strong>{{ $student->enrollment->grade_level ?? '-' }}</strong></p>
+        
+                        @if($student->studentID && $student->studentID->id_number)
+                            <p class="text-sm text-gray-700 col-span-1">Student ID: <strong>{{ $student->studentID->id_number }}</strong></p>
+                        @endif
+                        <p class="text-sm text-gray-700 col-span-1">Admission: <strong>{{ $student->enrollment->admission_type ?? '-' }}</strong></p>
+                        <p class="text-sm text-gray-700 col-span-1">Course: <strong>{{ $student->enrollment->course ?? '-' }}</strong></p>                        
+                        <p class="text-sm text-gray-700 col-span-1">Year Level: <strong>{{ $student->enrollment->year_level ?? '-' }}</strong></p>
                         <p class="text-sm text-gray-700 col-span-1">School Year: <strong>{{ $student->enrollment->school_year ?? '-' }}</strong></p>
                         <p class="text-sm text-gray-700 col-span-1">Birthdate: <strong>{{ $student->birthdate ? \Carbon\Carbon::parse($student->birthdate)->format('m/d/Y') : '-' }}</strong></p>
                         <p class="text-sm text-gray-700 col-span-1">Gender: <strong>{{ $student->gender ?? '-' }}</strong></p>
                         <p class="text-sm text-gray-700 col-span-1">Email: <strong>{{ $student->user->email ?? '-' }}</strong></p>
                         <p class="text-sm text-gray-700 col-span-1">Contact: <strong>{{ $student->contact ?? '-' }}</strong></p>
-                        <p class="text-sm text-gray-700 col-span-3">Address: <strong>{{ $student->address ?? '-' }}</strong></p>
+                        <p class="text-sm text-gray-700 col-span-3">Address: <strong>{{ $student->address ?? '' }}, {{ $student->baranggay }}, {{ $student->city }} , {{ $student->province }}</strong></p>
 
                         @if($student->enrollment->status === 'Rejected' && !empty($student->enrollment->remarks))
                             <div class="col-span-3 mt-2 text-sm text-red-700 font-medium bg-red-50 border-l-4 border-red-500 p-3 rounded-md">
@@ -78,16 +79,8 @@
                 <h3 class="text-xl font-bold text-blue-900 mb-4 flex items-center">
                     📁 Student Documents
                 </h3>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm text-gray-700">
-                    @php
-                        $docs = [
-                            'Birth Certificate' => $student->birthCertificate,
-                            'Form 137' => $student->form137,
-                            'Good Moral' => $student->goodMoral,
-                            'Report Card' => $student->reportCard,
-                        ];
-                    @endphp
-                    @foreach($docs as $label => $file)
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm text-gray-700">                
+                    @foreach($documents as $label => $file)
                         <div>
                             <span class="font-bold">{{ $label }}:</span>
                             @if(!empty($file))
@@ -106,6 +99,13 @@
                 <h3 class="text-xl font-bold text-blue-900 mb-4 flex items-center">
                     👨‍👩‍👧 Parent / Guardian Information
                 </h3>
+                <h4 class="text-sm font-semibold text-blue-800 mb-4">Parents' Details</h4>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm text-gray-700">
+                    <p><span class="font-bold">Father's Name:</span> {{ $student->fatherFName ?? '-' }} {{ $student->fatherMName ?? '' }} {{ $student->fatherLName ?? '' }}</p>
+                    <p><span class="font-bold">Mother's Name:</span> {{ $student->motherFName ?? '-' }} {{ $student->motherMName ?? '' }} {{ $student->motherLName ?? '' }}</p>
+                </div>
+                <hr class="my-6 border-gray-300">
+                <h4 class="text-sm font-semibold text-blue-800 mb-4">Guardian Details</h4>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm text-gray-700">
                     <p><span class="font-bold">Name:</span> {{ $student->guardianFName ?? '-' }} {{ $student->guardianMName ?? '' }} {{ $student->guardianLName ?? '' }}</p>
                     <p><span class="font-bold">Email:</span> {{ $student->guardianEmail ?? '-' }}</p>

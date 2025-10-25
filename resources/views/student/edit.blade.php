@@ -20,28 +20,33 @@
 
             <h2 class="text-2xl font-bold mb-6">Edit Student Details</h2>
             <div class="w-full max-w-3xl bg-white rounded-lg shadow-lg p-8">
+                <h3 class="text-xl font-bold text-blue-900 mb-4 flex items-center">
+                    Enrollment Details
+                </h3>
                     <div class="md:flex gap-2">
-                        <x-form.text name="firstname" label="First Name" required :value="old('firstname', $student->firstname)" />
-                        <x-form.text name="middlename" label="Middle Name" required :value="old('middlename', $student->middlename)" />
-                        <x-form.text name="lastname" label="Last Name" required :value="old('lastname', $student->lastname)" /> 
+                        <x-form.select name="course" label="Course" student {{ $isStudent ? 'disabled' : ''}} :options="['BSIT' => 'BS Information Technology', 'BSED' => 'BS Education', 'BSBA' => 'BS Business Administration']" :value="old('course', $student->enrollment->course ?? '')" />
+                    </div>
+
+                    <div class="md:flex gap-2">
+                        <x-form.text name="firstname" label="First Name" student :value="old('firstname', $student->firstname)" />
+                        <x-form.text name="middlename" label="Middle Name" student :value="old('middlename', $student->middlename)" />
+                        <x-form.text name="lastname" label="Last Name" student :value="old('lastname', $student->lastname)" /> 
                     </div>
                     <div class="md:flex gap-2">
-                        <x-form.select name="gender" label="Gender" required :options="['Male' => 'Male', 'Female' => 'Female']" :value="old('gender', $student->gender)" />
-                        <x-form.date name="birthdate" label="Birthdate" required pattern="\d{4}-\d{2}-\d{2}" placeholder="YYYY-MM-DD" :value="old('birthdate', $student->birthdate)" />
+                        <x-form.select name="gender" label="Gender" student :options="['Male' => 'Male', 'Female' => 'Female']" :value="old('gender', $student->gender)" />
+                        <x-form.date name="birthdate" label="Birthdate" student pattern="\d{4}-\d{2}-\d{2}" placeholder="YYYY-MM-DD" :value="old('birthdate', $student->birthdate)" />
                     </div>
+                    
                     <div class="md:flex gap-2">
-                        <x-form.select name="course" label="Course" required :options="['BSIT' => 'BS Information Technology', 'BSED' => 'BS Education', 'BSBA' => 'BS Business Administration']" :value="old('course', $student->enrollment->course ?? '')" />
-                    </div>
-                    <div class="md:flex gap-2">
-                        <x-form.text name="contact" label="Contact Number" required maxLength="11" :value="old('contact', $student->contact)"/>
-                        <x-form.text name="email" label="Email" required :value="old('email', $student->user->email)" />
+                        <x-form.text name="contact" label="Contact Number" student maxLength="11" :value="old('contact', $student->contact)"/>
+                        <x-form.text name="email" label="Email" student :value="old('email', $student->user->email)" />
                     </div>
                     <div class="md:flex gap-2">
                         <x-form.password name="password" label="Password (leave blank to keep current)" />
                         <x-form.password name="password_confirmation" label="Confirm Password" />
                     </div>
                     <div id="passwordError" class="text-red-600 text-sm text-center" style="display:none;"></div>
-                    <x-form.text name="address" label="Address" required :value="old('address', $student->address)" />
+                    <x-form.text name="address" label="Address" student :value="old('address', $student->address)" />
                     
                     <h3 class="font-bold text-blue-900 mt-12 uppercase mb-6">Documents (leave blank to keep current)</h3>
                     <div class="md:flex gap-2">
@@ -56,16 +61,16 @@
                     
                     <h3 class="font-bold text-blue-900 mt-12 uppercase mb-6">Parent/Guardian</h3>
                     <div class="md:flex gap-2">
-                        <x-form.text name="guardianFName" label="First Name" required :value="old('guardianFName', $student->guardianFName)" />
-                        <x-form.text name="guardianMName" label="Middle Name" required :value="old('guardianMName', $student->guardianMName)" />
-                        <x-form.text name="guardianLName" label="Last Name" required :value="old('guardianLName', $student->guardianLName)" /> 
+                        <x-form.text name="guardianFName" label="First Name" student :value="old('guardianFName', $student->guardianFName)" />
+                        <x-form.text name="guardianMName" label="Middle Name" student :value="old('guardianMName', $student->guardianMName)" />
+                        <x-form.text name="guardianLName" label="Last Name" student :value="old('guardianLName', $student->guardianLName)" /> 
                     </div>
                     <div class="md:flex gap-2">
-                        <x-form.text name="guardianEmail" label="Email" required :value="old('guardianEmail', $student->guardianEmail)" />
-                        <x-form.text name="guardianContact" label="Contact Number" required maxLength="11" :value="old('guardianContact', $student->guardianContact)"/>
-                        <x-form.text name="guardianRelationship" label="Relationship" required :value="old('guardianRelationship', $student->guardianRelationship)" />
+                        <x-form.text name="guardianEmail" label="Email" student :value="old('guardianEmail', $student->guardianEmail)" />
+                        <x-form.text name="guardianContact" label="Contact Number" student maxLength="11" :value="old('guardianContact', $student->guardianContact)"/>
+                        <x-form.text name="guardianRelationship" label="Relationship" student :value="old('guardianRelationship', $student->guardianRelationship)" />
                     </div>
-                    <x-form.text name="guardianAddress" label="Address" required :value="old('guardianAddress', $student->guardianAddress)" />
+                    <x-form.text name="guardianAddress" label="Address" student :value="old('guardianAddress', $student->guardianAddress)" />
                 </div>
 
                 <div class="justify-center mt-8">

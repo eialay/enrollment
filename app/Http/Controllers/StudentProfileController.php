@@ -12,12 +12,38 @@ class StudentProfileController extends Controller
 {
     public function show($id)
     {
+        
         $student = Student::findOrFail($id);
+        $data['student'] = $student;
+        
+        $data['studentImageUrl'] = $student->studentImage ? asset('storage/' . $student->studentImage) : '/img/default-dp.jpg';
 
         // Status color maps from config
-        $color = config('enrollment.enrollment_status_colors')[$student->enrollment->status ] ?? 'gray';
+        $data['color'] = config('enrollment.enrollment_status_colors')[$student->enrollment->status ] ?? 'gray';
 
-        return view('student.details', compact('student', 'color'));
+        $data['documents'] = [
+            'PSA Birth Certificate'     => $student->birthCertificate,
+            'Certificate of Good Moral' => $student->goodMoral,
+            'Barangay Clearance'        => $student->brgyClearance,            
+        ];
+
+        $requiredDocuments = [];
+        if($student->enrollment->admissionType == 'Transferee') {
+            $requiredDocuments = [
+                'Transcript of Records'     => $student->tor,
+                'Honorable Dismissal'       => $student->honDismissal,
+            ];
+        } else {
+            $requiredDocuments = [
+                'Form 138 (Report Card)'    => $student->reportCard,
+                'Form 137'                  => $student->form137,
+            ];
+        }
+        $data['documents'] = array_merge($data['documents'], $requiredDocuments);
+
+        $data['enrolled'] = $student->enrollment && in_array($student->enrollment->status, ['Enrolled', 'Completed']);
+        
+        return view('student.details', $data);
     }
     
     public function edit($id)
@@ -35,7 +61,10 @@ class StudentProfileController extends Controller
 
         $student = Student::findOrFail($id);
 
-        return view('student.edit', compact('student'));
+        $data['student'] = $student;
+        $data['isStudent'] = Auth::user()->role->name == 'Student';
+
+        return view('student.edit', $data);
     }
 
     public function update(Request $request)
